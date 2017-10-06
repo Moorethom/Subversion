@@ -38,7 +38,7 @@ class Player extends PCharacter { //The player class
   //modifyable Variables
   
   float c = 0.15; // friction coefficient
-  PVector grav = new PVector(0, -8); //gravity
+  PVector grav = new PVector(0, -9); //gravity
   PVector moveForce = new PVector (0.15, 0); //right 
   PVector negMoveForce = new PVector (-0.15, 0); //left
   
