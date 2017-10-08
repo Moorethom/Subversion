@@ -1,5 +1,7 @@
 class Block {
   PVector pos;
+  int blockH = 30;
+  int blockW = 30;
   
   
   public Block(int x, int y) {
@@ -7,7 +9,7 @@ class Block {
   }
   
   void draw() {
-    rect(pos.x, pos.y, 30, 30); 
+    rect(pos.x, pos.y, blockH, blockW); 
   }
 }
 

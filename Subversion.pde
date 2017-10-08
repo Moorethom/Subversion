@@ -3,6 +3,8 @@ color BACKGROUND_COLOUR = color(255,255,255);
 int ground = 550;
 
 
+
+
 //sets up classes
 Player player;
 World world;
