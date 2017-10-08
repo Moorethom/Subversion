@@ -7,7 +7,7 @@ class Block {
   }
   
   void draw() {
-    rect(pos.x, pos.y, 32, 32); 
+    rect(pos.x, pos.y, 30, 30); 
   }
 }
 

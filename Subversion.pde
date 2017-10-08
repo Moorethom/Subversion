@@ -1,5 +1,6 @@
 // constants
 color BACKGROUND_COLOUR = color(255,255,255);
+int ground = 550;
 
 
 //sets up classes
@@ -11,7 +12,7 @@ HUD hud;
 void setup() {
   size(1000, 600);
   background(BACKGROUND_COLOUR);
-  player = new Player(100, 100);
+  player = new Player(100, 400);
   world = new World();
   hud = new HUD();
   
