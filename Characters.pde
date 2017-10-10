@@ -8,10 +8,6 @@ class PCharacter {
   boolean collision = false;
 
 
-  //temp
-  int blockH = 30;
-  int blockW = 30;
-
   public PCharacter(int x, int y) {
     pos = new PVector(x, y);
     vel = new PVector(0, 0);
@@ -75,6 +71,7 @@ class Player extends PCharacter { //The player class
 
   void update() { //Main draw function
 
+
     //moves the character
     if (leftPressed) applyForce(negMoveForce); 
     if (rightPressed) applyForce(moveForce);
@@ -121,16 +118,25 @@ class Player extends PCharacter { //The player class
 
 
   void collideWithObjects(ArrayList<Block> blocks) { //block collision
-    for (Block i : blocks) {
-      if (pos.x+playerW > i.pos.x) {
-        if (pos.x+playerH-2 <i.pos.x+2){
-         ground = pos.x+playerW; 
-        }
-        if (pos.x < i.pos.x+blockW) {  
-          if (pos.y < i.pos.y+blockH && pos.y+playerH > i.pos.y) {
-            vel.x=0;
-            vel.y=0;
-            collision = true;
+
+    for (Block i : blocks) { //Runs though all blocks
+      
+      //X detections
+      if (pos.x+playerW > i.pos.x) { //left detection
+        if (pos.x < i.pos.x+blockW) {  //right detection
+
+
+          //Y detections
+          if (pos.y < i.pos.y+blockH) { //top 
+            if (pos.y+playerH > i.pos.y) { //bottom
+
+              if (pos.y+playerH < i.pos.y+5) { //this needs work. Tries to move ground to feet of player if standing on object
+                ground = pos.y+playerH; 
+              }
+
+              vel.y=0;
+              collision = true;
+            }
           }
         }
       }

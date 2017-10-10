@@ -41,9 +41,7 @@ class World {
     // .....
 
     blocks.add(new ConcreteBlock(400, 460));
-    blocks.add(new ConcreteBlock(420, 300));
-    blocks.add(new ConcreteBlock(420, 300));
-    blocks.add(new ConcreteBlock(420, 300));
+    blocks.add(new ConcreteBlock(420, 340));
 
 
     return blocks;
