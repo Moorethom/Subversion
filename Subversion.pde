@@ -1,6 +1,6 @@
 // constants
 color BACKGROUND_COLOUR = color(255,255,255);
-int ground = 550;
+
 
 
 
@@ -53,5 +53,9 @@ void keyReleased() {
   if (key == 'a')
   {
     player.stopLeft();
+  }
+  
+  if (key == 's'){
+    player.drop();
   }
 }

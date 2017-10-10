@@ -1,11 +1,11 @@
+float ground = 550; //ground height of the world
+int floor = 550;
+int blockH = 30;
+int blockW = 80;
+
 class World {
   ArrayList<Block> currentWorld;
   ArrayList<PCharacter> charactersInWorld;
-
-  //Temp
-  int blockH = 30;
-  int blockW = 30;
-
 
 
   public World() {
@@ -19,7 +19,7 @@ class World {
       character.update();
       character.collideWithObjects(currentWorld);
     }
-    line(0, ground, 1000, ground);
+    line(0, floor, 1000, floor);
   }
 
   void draw() {
@@ -39,9 +39,8 @@ class World {
     ArrayList<Block> blocks = new ArrayList();
 
     // .....
-    blocks.add(new ConcreteBlock(420, 300));
-    blocks.add(new ConcreteBlock(500, 500));
-    blocks.add(new ConcreteBlock(420, 300));
+
+    blocks.add(new ConcreteBlock(400, 460));
     blocks.add(new ConcreteBlock(420, 300));
     blocks.add(new ConcreteBlock(420, 300));
     blocks.add(new ConcreteBlock(420, 300));

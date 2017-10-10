@@ -5,8 +5,8 @@ class PCharacter {
   PVector vel;
   PVector accel;
   int mass = 1;
-  int playerH = 25;
-  int playerW = 10;
+  boolean collision = false;
+
 
   //temp
   int blockH = 30;
@@ -47,6 +47,9 @@ class Player extends PCharacter { //The player class
   PVector negMoveForce = new PVector (-0.2, 0); //left
   PVector grav = new PVector(0, 0.35);
 
+  int playerH = 25;
+  int playerW = 10;
+
 
 
   //variable set ups
@@ -76,13 +79,11 @@ class Player extends PCharacter { //The player class
     if (leftPressed) applyForce(negMoveForce); 
     if (rightPressed) applyForce(moveForce);
 
-    if (vel.x >= 3 ) {
-      vel.x = 3;
-    } else if (vel.x <= -3 ) {
-      vel.x = -3;
+    if (collision == false) {//checks the player is not haning on an object
+      applyForce(grav);
+    } else {
+      collision = false;
     }
-    applyForce(grav); 
-
 
     //friction calculations
     PVector friction = vel.copy();
@@ -92,10 +93,10 @@ class Player extends PCharacter { //The player class
 
     applyForce(friction);
 
-    //check for clipping into the ground
-    if (pos.y > ground-playerH) {
+
+    if (pos.y > floor-playerH) { //check to stop clipping into the floor
       vel.y = 0;
-      pos.y = ground-playerH;
+      pos.y = floor-playerH;
     }
 
     super.update();
@@ -108,7 +109,7 @@ class Player extends PCharacter { //The player class
     /* things to do
      - add spirtes 
      */
-    rect(pos.x, pos.y, 10, playerH);
+    rect(pos.x, pos.y, playerW, playerH);
   }
 
   //This is used for takeDowns
@@ -118,14 +119,19 @@ class Player extends PCharacter { //The player class
     }
   }
 
-  //object collsion
-  void collideWithObjects(ArrayList<Block> blocks) {
+
+  void collideWithObjects(ArrayList<Block> blocks) { //block collision
     for (Block i : blocks) {
-      if (pos.x >= i.pos.x && pos.x <= i.pos.x + blockW) { //top check
-      println("wtf");
-        if (pos.y >= i.pos.y && pos.y <= i.pos.y +blockH) {
-          println("hi");
-          vel.x = 0;
+      if (pos.x+playerW > i.pos.x) {
+        if (pos.x+playerH-2 <i.pos.x+2){
+         ground = pos.x+playerW; 
+        }
+        if (pos.x < i.pos.x+blockW) {  
+          if (pos.y < i.pos.y+blockH && pos.y+playerH > i.pos.y) {
+            vel.x=0;
+            vel.y=0;
+            collision = true;
+          }
         }
       }
     }
@@ -154,7 +160,11 @@ class Player extends PCharacter { //The player class
   }
 
   void jump() {
-    if (pos.y >= ground-playerH)
+    if (pos.y >= ground-playerH) //checks if the player is on the ground allowing to drop
       applyForce(jumpForce);
+  }
+
+  void drop() {
+    vel.y = 2;
   }
 }
