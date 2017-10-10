@@ -42,7 +42,7 @@ class Player extends PCharacter { //The player class
   PVector moveForce = new PVector (0.18, 0); //right 
   PVector negMoveForce = new PVector (-0.18, 0); //left
   PVector grav = new PVector(0, 0.35); //gravity
-  float xMax = 2; //Terminal velocity on the x axis
+  float xMax = 2.7; //Terminal velocity on the x axis
   float errorMarg = 3; //a margin of error for early detection
 
 
@@ -75,9 +75,9 @@ class Player extends PCharacter { //The player class
 
 
   void update() { //Main draw function
-
-
-    ground = floor;
+  
+    println(ground);
+    println(pos.y);
 
     //moves the character if pressed
     if (leftPressed) applyForce(negMoveForce); 
@@ -105,8 +105,6 @@ class Player extends PCharacter { //The player class
       pos.y = floor-playerH;
     }
 
-
-
     super.update();
   }
 
@@ -128,6 +126,8 @@ class Player extends PCharacter { //The player class
 
 
   void collideWithObjects(ArrayList<Block> blocks) { //block collision
+  
+    ground = floor;
 
     for (Block i : blocks) { //Runs though all blocks
 
@@ -141,18 +141,21 @@ class Player extends PCharacter { //The player class
             if (pos.y+playerH-2 > i.pos.y) { //top
 
 
-              if (pos.y+playerH-2 < i.pos.y+3) { 
-                //this needs work tries to move player if standing on object to object top
-                pos.y = i.pos.y-playerH;
-                ground = pos.y+playerH; //this is a test variable 
-              }
+              if (pos.y < i.pos.y+blockH) { //top 
+                if (pos.y+playerH > i.pos.y) { //bottom
 
-              if (pos.y+playerH-2 > i.pos.y+3) { //this needs work. Tries to move ground to feet of player if standing on objectawwwd
-                pos.y=i.pos.y+blockH-1;
-              }
 
-              vel.y=0;
-              collision = true;
+
+                  if (pos.y+playerH < i.pos.y+3) { //this needs work. Tries to move ground to feet of player if standing on object
+                    pos.y = i.pos.y-playerH;
+                    ground = pos.y-playerH;
+                  }
+
+
+                  vel.y=0;
+                  collision = true;
+                }
+              }
             }
           }
         }
