@@ -39,18 +39,18 @@ class Player extends PCharacter { //The player class
 
   float c = 0.15; // friction coefficient
   PVector jumpForce = new PVector(0, -10); //jump
-  PVector moveForce = new PVector (0.2, 0); //right 
-  PVector negMoveForce = new PVector (-0.2, 0); //left
-  PVector grav = new PVector(0, 0.35);
-
-  int playerH = 25;
-  int playerW = 10;
-
+  PVector moveForce = new PVector (0.18, 0); //right 
+  PVector negMoveForce = new PVector (-0.18, 0); //left
+  PVector grav = new PVector(0, 0.35); //gravity
+  float xMax = 2; //Terminal velocity on the x axis
+  float errorMarg = 3; //a margin of error for early detection
 
 
   //variable set ups
   boolean leftPressed;
   boolean rightPressed;
+  int playerH = 25; 
+  int playerW = 10;
 
 
 
@@ -63,6 +63,11 @@ class Player extends PCharacter { //The player class
 
 
   void applyForce(PVector force) { //force calculations
+    if (vel.x >= xMax ) {
+      vel.x = xMax;
+    } else if (vel.x <= -xMax ) {
+      vel.x = -xMax;
+    }
     PVector f = PVector.div(force, mass);
     accel.add(f);
   }
@@ -72,9 +77,12 @@ class Player extends PCharacter { //The player class
   void update() { //Main draw function
 
 
-    //moves the character
+    ground = floor;
+
+    //moves the character if pressed
     if (leftPressed) applyForce(negMoveForce); 
     if (rightPressed) applyForce(moveForce);
+
 
     if (collision == false) {//checks the player is not haning on an object
       applyForce(grav);
@@ -82,25 +90,27 @@ class Player extends PCharacter { //The player class
       collision = false;
     }
 
-    //friction calculations
+    //friction calculations and application 
     PVector friction = vel.copy();
     friction.mult(-1); 
     friction.normalize();
     friction.mult(c);
-
     applyForce(friction);
 
 
+
+
     if (pos.y > floor-playerH) { //check to stop clipping into the floor
-      vel.y = 0;
+      vel.y = 0; 
       pos.y = floor-playerH;
     }
+
+
 
     super.update();
   }
 
   void draw() {
-
 
     // do extra stuff here
     /* things to do
@@ -120,18 +130,25 @@ class Player extends PCharacter { //The player class
   void collideWithObjects(ArrayList<Block> blocks) { //block collision
 
     for (Block i : blocks) { //Runs though all blocks
-      
+
       //X detections
       if (pos.x+playerW > i.pos.x) { //left detection
         if (pos.x < i.pos.x+blockW) {  //right detection
 
 
           //Y detections
-          if (pos.y < i.pos.y+blockH) { //top 
-            if (pos.y+playerH > i.pos.y) { //bottom
+          if (pos.y-2 < i.pos.y+blockH) { //bottom
+            if (pos.y+playerH-2 > i.pos.y) { //top
 
-              if (pos.y+playerH < i.pos.y+5) { //this needs work. Tries to move ground to feet of player if standing on object
-                ground = pos.y+playerH; 
+
+              if (pos.y+playerH-2 < i.pos.y+3) { 
+                //this needs work tries to move player if standing on object to object top
+                pos.y = i.pos.y-playerH;
+                ground = pos.y+playerH; //this is a test variable 
+              }
+
+              if (pos.y+playerH-2 > i.pos.y+3) { //this needs work. Tries to move ground to feet of player if standing on objectawwwd
+                pos.y=i.pos.y+blockH-1;
               }
 
               vel.y=0;
@@ -142,11 +159,6 @@ class Player extends PCharacter { //The player class
       }
     }
   }
-
-
-
-
-
 
   //Button presses
   void moveRight() {
