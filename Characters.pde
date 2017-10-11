@@ -45,7 +45,8 @@ class Player extends PCharacter { //The player class
   float xMax = 3; //Terminal velocity on the x axis
   //float yMax = 10; //Terminal velocity on the y axis 
   boolean topCollision = false; //checks if player is on the top
-
+  boolean rightCollision = false;
+  boolean leftCollision = false;
 
   //variable set ups
   boolean leftPressed;
@@ -150,26 +151,28 @@ class Player extends PCharacter { //The player class
             if (pos.y+playerH > i.pos.y) { //top
 
 
-              if (pos.x+playerW > i.pos.x) { //left side detection
-                if (pos.x+playerW < i.pos.x+5) {
-                  pos.x = i.pos.x-playerW;
-                }
-              }
-
-              if (pos.x > i.pos.x+blockW-5) { //right side detection
-                if (pos.x < i.pos.x+blockW) {
-                  pos.x = i.pos.x+blockW;
-                }
-              }
               topCollision = false;
+              rightCollision = false;
+              leftCollision = false;
 
-              if (pos.y+playerH < i.pos.y+(blockH)) { //this checks if the player is on top of an object
+              if (pos.y+playerH > i.pos.y+(blockH)) { //this checks if the player is on top of an object
+                pos.y=i.pos.y+blockH-1;
+              } else if (pos.y < i.pos.y+blockH-5) { //this checks if the player is hanging off the object
                 pos.y = i.pos.y-playerH;
                 topCollision = true;
-              } else if (pos.y > i.pos.y+blockH+(blockH/2)) { //this checks if the player is hanging off the object
-                pos.y=i.pos.y+blockH-1;
+              } 
+
+              if (pos.x+playerW > i.pos.x) { //left side detection
+                if (pos.x+playerW < i.pos.x) {
+                  pos.x = i.pos.x-playerW;
+                  rightCollision = true;
+                }
+              } else if (pos.x > i.pos.x+blockW) { //right side detection
+                if (pos.x < i.pos.x+blockW) {
+                  pos.x = i.pos.x+blockW;
+                  leftCollision = true;
+                }
               }
-              
 
               vel.y=0;
               collision = true;
@@ -204,9 +207,11 @@ class Player extends PCharacter { //The player class
   }
 
   void jump() {
-    if (pos.y+playerH >= ground || topCollision == true) //checks if the player is on the ground allowing to drop
+    if (pos.y+playerH >= ground || topCollision == true || leftCollision == true || rightCollision == true) //checks if the player is on the ground allowing to drop
       applyForce(jumpForce);
     topCollision = false;
+    leftCollision = false;
+    rightCollision = false;
   }
 
   void drop() {

@@ -1,6 +1,6 @@
 float ground; //ground height of the world
 int floor = 550;
-int blockH = 15;
+int blockH = 20;
 int blockW = 120;
 
 class World {
@@ -45,7 +45,8 @@ class World {
     blocks.add(new ConcreteBlock(580, 400));
     blocks.add(new ConcreteBlock(300, 220));
     blocks.add(new ConcreteBlock(180, 305));
-    blocks.add(new ConcreteBlock(600, 150));
+    blocks.add(new ConcreteBlock(600, 180));
+    blocks.add(new ConcreteBlock(500, 180));
     //........
 
     return blocks;
