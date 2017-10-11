@@ -1,6 +1,6 @@
 float ground; //ground height of the world
-int floor = 550;
-int blockH = 20;
+int floor = 750;
+int blockH = 6;
 int blockW = 120;
 
 class World {
@@ -19,7 +19,7 @@ class World {
       character.update();
       character.collideWithObjects(currentWorld);
     }
-    line(0, floor, 1000, floor);
+    line(0, floor, width, floor);
   }
 
   void draw() {
@@ -35,7 +35,7 @@ class World {
   void generateWorld() {
   }
 
- 
+
   ArrayList<Block> loadLevel(int levelNum) { //this generates the level
     ArrayList<Block> blocks = new ArrayList();
 

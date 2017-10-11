@@ -37,22 +37,23 @@ class Player extends PCharacter { //The player class
 
   //modifyable Variables
 
-  float c = 0.12; // friction coefficient
+  float c = 0.1; // friction coefficient
   PVector jumpForce = new PVector(0, -10); //jump
-  PVector moveForce = new PVector (0.2, 0); //right 
-  PVector negMoveForce = new PVector (-0.2, 0); //left
+  PVector moveForce = new PVector (0.22, 0); //right 
+  PVector negMoveForce = new PVector (-0.22, 0); //left
   PVector grav = new PVector(0, 0.35); //gravity
   float xMax = 3; //Terminal velocity on the x axis
   //float yMax = 10; //Terminal velocity on the y axis 
   boolean topCollision = false; //checks if player is on the top
+  boolean botCollision = false;
   boolean rightCollision = false;
   boolean leftCollision = false;
 
   //variable set ups
   boolean leftPressed;
   boolean rightPressed;
-  int playerH = 25; 
-  int playerW = 10;
+  int playerH = 42; 
+  int playerW = 15;
 
 
 
@@ -116,17 +117,15 @@ class Player extends PCharacter { //The player class
 
     ground = floor; //this resets the players ground position to stop it from jumping when not on an object or floor
 
-
     super.update();
   }
 
   void draw() {
 
     // do extra stuff here
-    /* things to do
-     - add spirtes 
-     */
+    //image(pStanding, pos.x, pos.y);
     rect(pos.x, pos.y, playerW, playerH);
+    
   }
 
   //This is used for takeDowns
@@ -142,37 +141,38 @@ class Player extends PCharacter { //The player class
     for (Block i : blocks) { //Runs though all blocks
 
       //X detections
-      if (pos.x+playerW > i.pos.x) { //left detection
-        if (pos.x < i.pos.x+blockW) {  //right detection
+      if (pos.x+playerW >= i.pos.x) { //left detection
+        if (pos.x <= i.pos.x+blockW) {  //right detection
 
 
           //Y detections
-          if (pos.y < i.pos.y+blockH) { //bottom
-            if (pos.y+playerH > i.pos.y) { //top
+          if (pos.y <= i.pos.y+blockH) { //bottom
+            if (pos.y+playerH >= i.pos.y-(blockH/2)) { //top
 
 
               topCollision = false;
               rightCollision = false;
               leftCollision = false;
 
-              if (pos.y+playerH > i.pos.y+(blockH)) { //this checks if the player is on top of an object
+              if (pos.y+playerH >= i.pos.y+(blockH)) { //this checks if the player is hanging off the object
                 pos.y=i.pos.y+blockH-1;
-              } else if (pos.y < i.pos.y+blockH-5) { //this checks if the player is hanging off the object
+                botCollision = true;
+              } else if (pos.y <= i.pos.y+blockH) { //this checks if the player is on top of an object
                 pos.y = i.pos.y-playerH;
                 topCollision = true;
               } 
 
-              if (pos.x+playerW > i.pos.x) { //left side detection
-                if (pos.x+playerW < i.pos.x) {
-                  pos.x = i.pos.x-playerW;
-                  rightCollision = true;
-                }
-              } else if (pos.x > i.pos.x+blockW) { //right side detection
-                if (pos.x < i.pos.x+blockW) {
-                  pos.x = i.pos.x+blockW;
-                  leftCollision = true;
-                }
-              }
+              //if (pos.x+playerW > i.pos.x) { //left side detection
+              //  if (pos.x+playerW < i.pos.x) {
+              //    pos.x = i.pos.x-playerW;
+              //    rightCollision = true;
+              // }
+              //} else if (pos.x > i.pos.x+blockW) { //right side detection
+              // if (pos.x < i.pos.x+blockW) {
+              //   pos.x = i.pos.x+blockW;
+              //   leftCollision = true;
+              // }
+              //}
 
               vel.y=0;
               collision = true;
@@ -215,7 +215,10 @@ class Player extends PCharacter { //The player class
   }
 
   void drop() {
-    vel.y = 3;
-    topCollision = false;
+    if (botCollision == true) {
+      vel.y = 3;
+      topCollision = false;
+      botCollision = false;
+    }
   }
 }

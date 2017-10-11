@@ -1,5 +1,6 @@
 // constants
 color BACKGROUND_COLOUR = color(255,255,255);
+PImage pStanding;
 
 
 //sets up classes
@@ -9,7 +10,7 @@ HUD hud;
 
 
 void setup() {
-  size(1000, 600, P2D);
+  size(1400, 800, P2D);
   background(BACKGROUND_COLOUR);
   player = new Player(30, floor+25);
   world = new World();
@@ -17,6 +18,10 @@ void setup() {
   
   //world 
   world.charactersInWorld.add(player);
+  
+  //sprites
+  pStanding = loadImage("pStanding.png");
+  
 }
 
 
