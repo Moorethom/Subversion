@@ -2,9 +2,6 @@
 color BACKGROUND_COLOUR = color(255,255,255);
 
 
-
-
-
 //sets up classes
 Player player;
 World world;
@@ -12,7 +9,7 @@ HUD hud;
 
 
 void setup() {
-  size(1000, 600);
+  size(1000, 600, P2D);
   background(BACKGROUND_COLOUR);
   player = new Player(100, 500);
   world = new World();

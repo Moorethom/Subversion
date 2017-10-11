@@ -43,7 +43,8 @@ class Player extends PCharacter { //The player class
   PVector negMoveForce = new PVector (-0.18, 0); //left
   PVector grav = new PVector(0, 0.35); //gravity
   float xMax = 2.7; //Terminal velocity on the x axis
-  boolean topCollision = false;
+  float yMax = 12; //Terminal velocity on the y axis 
+  boolean topCollision = false; //checks if player is on the top
 
 
   //variable set ups
@@ -57,17 +58,27 @@ class Player extends PCharacter { //The player class
   public Player(int x, int y) {
     super(x, y);
 
-    leftPressed = false;
+    leftPressed = false; 
     rightPressed = false;
   }
 
 
   void applyForce(PVector force) { //force calculations
-    if (vel.x >= xMax ) {
+    //Terminal velocity x value
+    if (vel.x >= xMax ) { 
       vel.x = xMax;
     } else if (vel.x <= -xMax ) {
       vel.x = -xMax;
     }
+    
+    //Terminal velocity y value 
+    if (vel.y >= yMax ) {
+      vel.y = yMax;
+    } else if (vel.y <= -yMax ) {
+      vel.y = -yMax;
+    }
+    
+    //Calulations 
     PVector f = PVector.div(force, mass);
     accel.add(f);
   }
@@ -76,15 +87,12 @@ class Player extends PCharacter { //The player class
 
   void update() { //Main draw function
 
-    println(ground);
-    println(pos.y+playerH);
-
     //moves the character if pressed
     if (leftPressed) applyForce(negMoveForce); 
     if (rightPressed) applyForce(moveForce);
 
 
-    if (collision == false) {//checks the player is not haning on an object
+    if (collision == false) { //checks the player is not hanging on an object
       applyForce(grav);
     } else {
       collision = false;
@@ -105,7 +113,7 @@ class Player extends PCharacter { //The player class
       pos.y = floor-playerH;
     }
 
-    ground = floor;
+    ground = floor; //this resets the players ground position to stop it from jumping when not on an object or floor
 
     super.update();
   }
@@ -140,12 +148,12 @@ class Player extends PCharacter { //The player class
           if (pos.y < i.pos.y+blockH) { //bottom
             if (pos.y+playerH > i.pos.y) { //top
 
-              if (pos.y+playerH < i.pos.y+(blockH/2.2)) { //this needs work. Tries to move ground to feet of player if standing on object
+              if (pos.y+playerH < i.pos.y+(blockH)) { //this needs work. Tries to move ground to feet of player if standing on object
                 pos.y = i.pos.y-playerH;
                 topCollision = true;
               }
 
-              if (pos.y > i.pos.y+blockH) {
+              if (pos.y > i.pos.y+blockH) { //this is the player hitting the roof collision to stop clipping 
                 pos.y=i.pos.y+blockH-1;
               }
 
