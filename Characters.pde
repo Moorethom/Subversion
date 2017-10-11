@@ -86,8 +86,8 @@ class Player extends PCharacter { //The player class
 
 
   void update() { //Main draw function
-  
-    
+
+
 
     //moves the character if pressed
     if (leftPressed) applyForce(negMoveForce); 
@@ -114,7 +114,7 @@ class Player extends PCharacter { //The player class
     }
 
     ground = floor; //this resets the players ground position to stop it from jumping when not on an object or floor
-    topCollision = false;
+
 
     super.update();
   }
@@ -155,12 +155,13 @@ class Player extends PCharacter { //The player class
                   pos.x = i.pos.x-playerW;
                 }
               }
-              
+
               if (pos.x > i.pos.x+blockW-5) { //right side detection
                 if (pos.x < i.pos.x+blockW) {
                   pos.x = i.pos.x+blockW;
                 }
               }
+              topCollision = false;
 
               if (pos.y+playerH < i.pos.y+(blockH)) { //this checks if the player is on top of an object
                 pos.y = i.pos.y-playerH;
@@ -168,6 +169,7 @@ class Player extends PCharacter { //The player class
               } else if (pos.y > i.pos.y+blockH+(blockH/2)) { //this checks if the player is hanging off the object
                 pos.y=i.pos.y+blockH-1;
               }
+              
 
               vel.y=0;
               collision = true;
@@ -179,9 +181,9 @@ class Player extends PCharacter { //The player class
   }
 
 
-//--------------------------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------------------------//
 
-//Button presses
+  //Button presses
 
   void moveRight() {
     rightPressed = true;
@@ -195,12 +197,10 @@ class Player extends PCharacter { //The player class
 
   void stopRight() {
     rightPressed = false;
-    topCollision = false;
   }
 
   void stopLeft() {
     leftPressed = false;
-    topCollision = false;
   }
 
   void jump() {
@@ -211,5 +211,6 @@ class Player extends PCharacter { //The player class
 
   void drop() {
     vel.y = 3;
+    topCollision = false;
   }
 }
