@@ -1,4 +1,4 @@
-float ground = 550; //ground height of the world
+float ground; //ground height of the world
 int floor = 550;
 int blockH = 15;
 int blockW = 120;

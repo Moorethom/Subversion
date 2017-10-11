@@ -14,7 +14,7 @@ HUD hud;
 void setup() {
   size(1000, 600);
   background(BACKGROUND_COLOUR);
-  player = new Player(100, 400);
+  player = new Player(100, 500);
   world = new World();
   hud = new HUD();
   
