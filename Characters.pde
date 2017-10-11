@@ -37,7 +37,7 @@ class Player extends PCharacter { //The player class
 
   //modifyable Variables
 
-  float c = 0.13; // friction coefficient
+  float c = 0.12; // friction coefficient
   PVector jumpForce = new PVector(0, -10); //jump
   PVector moveForce = new PVector (0.2, 0); //right 
   PVector negMoveForce = new PVector (-0.2, 0); //left
@@ -86,6 +86,8 @@ class Player extends PCharacter { //The player class
 
 
   void update() { //Main draw function
+  
+    
 
     //moves the character if pressed
     if (leftPressed) applyForce(negMoveForce); 
@@ -106,14 +108,13 @@ class Player extends PCharacter { //The player class
     applyForce(friction);
 
 
-
-
     if (pos.y > floor-playerH) { //check to stop clipping into the floor
       vel.y = 0; 
       pos.y = floor-playerH;
     }
 
     ground = floor; //this resets the players ground position to stop it from jumping when not on an object or floor
+    topCollision = false;
 
     super.update();
   }
@@ -149,13 +150,13 @@ class Player extends PCharacter { //The player class
             if (pos.y+playerH > i.pos.y) { //top
 
 
-              if (pos.x+playerW > i.pos.x) { //left side 
+              if (pos.x+playerW > i.pos.x) { //left side detection
                 if (pos.x+playerW < i.pos.x+5) {
                   pos.x = i.pos.x-playerW;
                 }
               }
               
-              if (pos.x > i.pos.x+blockW-5) { //right side 
+              if (pos.x > i.pos.x+blockW-5) { //right side detection
                 if (pos.x < i.pos.x+blockW) {
                   pos.x = i.pos.x+blockW;
                 }
@@ -178,8 +179,10 @@ class Player extends PCharacter { //The player class
   }
 
 
+//--------------------------------------------------------------------------------------------//
 
-  //Button presses
+//Button presses
+
   void moveRight() {
     rightPressed = true;
     topCollision = false;
@@ -192,10 +195,12 @@ class Player extends PCharacter { //The player class
 
   void stopRight() {
     rightPressed = false;
+    topCollision = false;
   }
 
   void stopLeft() {
     leftPressed = false;
+    topCollision = false;
   }
 
   void jump() {

@@ -11,7 +11,7 @@ HUD hud;
 void setup() {
   size(1000, 600, P2D);
   background(BACKGROUND_COLOUR);
-  player = new Player(100, 500);
+  player = new Player(30, floor+25);
   world = new World();
   hud = new HUD();
   
