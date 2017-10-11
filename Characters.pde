@@ -43,7 +43,7 @@ class Player extends PCharacter { //The player class
   PVector negMoveForce = new PVector (-0.18, 0); //left
   PVector grav = new PVector(0, 0.35); //gravity
   float xMax = 2.7; //Terminal velocity on the x axis
-  float errorMarg = 3; //a margin of error for early detection
+  boolean topCollision = false;
 
 
   //variable set ups
@@ -105,6 +105,8 @@ class Player extends PCharacter { //The player class
       pos.y = floor-playerH;
     }
 
+    ground = floor;
+
     super.update();
   }
 
@@ -127,7 +129,6 @@ class Player extends PCharacter { //The player class
 
   void collideWithObjects(ArrayList<Block> blocks) { //block collision
 
-
     for (Block i : blocks) { //Runs though all blocks
 
       //X detections
@@ -138,16 +139,14 @@ class Player extends PCharacter { //The player class
           //Y detections
           if (pos.y < i.pos.y+blockH) { //bottom
             if (pos.y+playerH > i.pos.y) { //top
-            
-             ground = floor;
 
-              if (pos.y+playerH < i.pos.y+3) { //this needs work. Tries to move ground to feet of player if standing on object
+              if (pos.y+playerH < i.pos.y+(blockH/2.2)) { //this needs work. Tries to move ground to feet of player if standing on object
                 pos.y = i.pos.y-playerH;
-                ground = pos.y-playerH;
+                topCollision = true;
               }
-              
-              if(pos.y > i.pos.y+blockH){
-              pos.y=i.pos.y+blockH-1;
+
+              if (pos.y > i.pos.y+blockH) {
+                pos.y=i.pos.y+blockH-1;
               }
 
               vel.y=0;
@@ -164,10 +163,12 @@ class Player extends PCharacter { //The player class
   //Button presses
   void moveRight() {
     rightPressed = true;
+    topCollision = false;
   }
 
   void moveLeft() {
     leftPressed = true;
+    topCollision = false;
   }
 
   void stopRight() {
@@ -179,8 +180,9 @@ class Player extends PCharacter { //The player class
   }
 
   void jump() {
-    if (pos.y+playerH >= ground) //checks if the player is on the ground allowing to drop
+    if (pos.y+playerH >= ground || topCollision == true) //checks if the player is on the ground allowing to drop
       applyForce(jumpForce);
+    topCollision = false;
   }
 
   void drop() {
