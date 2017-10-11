@@ -37,13 +37,13 @@ class Player extends PCharacter { //The player class
 
   //modifyable Variables
 
-  float c = 0.15; // friction coefficient
+  float c = 0.13; // friction coefficient
   PVector jumpForce = new PVector(0, -10); //jump
-  PVector moveForce = new PVector (0.18, 0); //right 
-  PVector negMoveForce = new PVector (-0.18, 0); //left
+  PVector moveForce = new PVector (0.2, 0); //right 
+  PVector negMoveForce = new PVector (-0.2, 0); //left
   PVector grav = new PVector(0, 0.35); //gravity
-  float xMax = 2.7; //Terminal velocity on the x axis
-  float yMax = 12; //Terminal velocity on the y axis 
+  float xMax = 3; //Terminal velocity on the x axis
+  float yMax = 10; //Terminal velocity on the y axis 
   boolean topCollision = false; //checks if player is on the top
 
 
@@ -72,11 +72,11 @@ class Player extends PCharacter { //The player class
     }
     
     //Terminal velocity y value 
-    if (vel.y >= yMax ) {
-      vel.y = yMax;
-    } else if (vel.y <= -yMax ) {
-      vel.y = -yMax;
-    }
+    //if (vel.y >= yMax ) {
+     // vel.y = yMax;
+    //} else if (vel.y <= -yMax ) {
+    //  vel.y = -yMax;
+    //}
     
     //Calulations 
     PVector f = PVector.div(force, mass);
@@ -151,9 +151,7 @@ class Player extends PCharacter { //The player class
               if (pos.y+playerH < i.pos.y+(blockH)) { //this needs work. Tries to move ground to feet of player if standing on object
                 pos.y = i.pos.y-playerH;
                 topCollision = true;
-              }
-
-              if (pos.y > i.pos.y+blockH) { //this is the player hitting the roof collision to stop clipping 
+              } else if (pos.y > i.pos.y+blockH+(blockH/2)) { //this is the player hitting the roof collision to stop clipping 
                 pos.y=i.pos.y+blockH-1;
               }
 
@@ -194,6 +192,6 @@ class Player extends PCharacter { //The player class
   }
 
   void drop() {
-    vel.y = 2;
+    vel.y = 3;
   }
 }
