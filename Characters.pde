@@ -43,7 +43,7 @@ class Player extends PCharacter { //The player class
   PVector negMoveForce = new PVector (-0.2, 0); //left
   PVector grav = new PVector(0, 0.35); //gravity
   float xMax = 3; //Terminal velocity on the x axis
-  float yMax = 10; //Terminal velocity on the y axis 
+  //float yMax = 10; //Terminal velocity on the y axis 
   boolean topCollision = false; //checks if player is on the top
 
 
@@ -70,14 +70,14 @@ class Player extends PCharacter { //The player class
     } else if (vel.x <= -xMax ) {
       vel.x = -xMax;
     }
-    
+
     //Terminal velocity y value 
     //if (vel.y >= yMax ) {
-     // vel.y = yMax;
+    // vel.y = yMax;
     //} else if (vel.y <= -yMax ) {
     //  vel.y = -yMax;
     //}
-    
+
     //Calulations 
     PVector f = PVector.div(force, mass);
     accel.add(f);
@@ -148,10 +148,23 @@ class Player extends PCharacter { //The player class
           if (pos.y < i.pos.y+blockH) { //bottom
             if (pos.y+playerH > i.pos.y) { //top
 
-              if (pos.y+playerH < i.pos.y+(blockH)) { //this needs work. Tries to move ground to feet of player if standing on object
+
+              if (pos.x+playerW > i.pos.x) { //left side 
+                if (pos.x+playerW < i.pos.x+5) {
+                  pos.x = i.pos.x-playerW;
+                }
+              }
+              
+              if (pos.x > i.pos.x+blockW-5) { //right side 
+                if (pos.x < i.pos.x+blockW) {
+                  pos.x = i.pos.x+blockW;
+                }
+              }
+
+              if (pos.y+playerH < i.pos.y+(blockH)) { //this checks if the player is on top of an object
                 pos.y = i.pos.y-playerH;
                 topCollision = true;
-              } else if (pos.y > i.pos.y+blockH+(blockH/2)) { //this is the player hitting the roof collision to stop clipping 
+              } else if (pos.y > i.pos.y+blockH+(blockH/2)) { //this checks if the player is hanging off the object
                 pos.y=i.pos.y+blockH-1;
               }
 
