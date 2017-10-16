@@ -324,9 +324,9 @@ class Guard extends PCharacter {
 
     super.update();
 
-    if (pos.y > ground-playerH) { //check to stop clipping into the floor
+    if (pos.y >= ground-playerH) { //check to stop clipping into the floor
       vel.y = 0; 
-      pos.y = floor-playerH;
+      pos.y = ground-playerH;
     }
 
     ground = floor; //this resets the players ground position to stop it from jumping when not on an object or floor
@@ -335,7 +335,7 @@ class Guard extends PCharacter {
 
 
   void guardKilled() {
-    pos.x = (5000);
+    pos.x = (5000000);
   }
 
 
@@ -343,6 +343,9 @@ class Guard extends PCharacter {
   void collideWithObjects(ArrayList<Block> blocks) { //block collision
 
     for (Block i : blocks) { //Runs though all blocks
+      topCollision = false;
+      rightCollision = false;
+      leftCollision = false;
 
       //X detections
       if (pos.x+playerW >= i.pos.x) { //left detection
@@ -354,22 +357,23 @@ class Guard extends PCharacter {
             if (pos.y+playerH >= i.pos.y-(blockH)) { //top
 
 
-              topCollision = false;
-              rightCollision = false;
-              leftCollision = false;
-            } else if (pos.y <= i.pos.y+blockH) { //this checks if the player is on top of an object
-              pos.y = i.pos.y-playerH;
-              topCollision = true;
-            } 
+              if (pos.y <= i.pos.y+blockH) { //this checks if the player is on top of an object
+                pos.y = i.pos.y-playerH;
+                topCollision = true;
+                if (pos.y+playerH >= i.pos.y+blockH) {
 
-            if (pos.x +vel.x <= i.pos.x) {
-              moveL = true;
-            } else if (pos.x + vel.x >= i.pos.x+blockW-2) {
-              moveL = false;
+                  if (pos.x + vel.x <= i.pos.x) {
+                    moveL = true;
+                  } 
+                  if (pos.x + vel.x >= i.pos.x+blockW-2) {
+                    moveL = false;
+                  }
+                }
+              }
+
+              vel.y=0;
+              collision = true;
             }
-
-            vel.y=0;
-            collision = true;
           }
         }
       }

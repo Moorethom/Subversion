@@ -1,7 +1,7 @@
 float ground; //ground height of the world
 int floor = 750;
 int blockH = 10;
-int blockW = 120;
+int blockW = 150;
 int tempCount = 0;
 
 
@@ -53,12 +53,20 @@ class World {
     ArrayList<Block> blocks = new ArrayList();
 
     //.........
-    blocks.add(new ConcreteBlock(600, 600));
+    blocks.add(new ConcreteBlock(650, 600));
+    blocks.add(new ConcreteBlock(720, 600));
+    blocks.add(new ConcreteBlock(450, 420));
+    blocks.add(new ConcreteBlock(360, 490));
+    blocks.add(new ConcreteBlock(720, 600));
     blocks.add(new ConcreteBlock(720, 600));
 
     //........
-    guard1 = new Guard(625, 500+25);
-    guard2 = new Guard(675, 500+25);
+    guard1 = new Guard(685, 500-25);
+    guard2 = new Guard(375, 200-25);
+    guard3 = new Guard(550, 100-25);
+    guard4 = new Guard(0, 0);
+    guard5 = new Guard(0, 250-25);
+    guard6 = new Guard(0, 250-25);
 
 
     return blocks;

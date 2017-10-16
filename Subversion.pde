@@ -10,6 +10,8 @@ Guard guard1;
 Guard guard2;
 Guard guard3;
 Guard guard4;
+Guard guard5;
+Guard guard6;
 World world;
 HUD hud;
 
@@ -26,6 +28,10 @@ void setup() {
   world.charactersInWorld.add(player);
   world.charactersInWorld.add(guard1);
   world.charactersInWorld.add(guard2);
+  world.charactersInWorld.add(guard3);
+  world.charactersInWorld.add(guard4);
+  world.charactersInWorld.add(guard5);
+  world.charactersInWorld.add(guard6);
 
 
   //spritesd
