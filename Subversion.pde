@@ -1,10 +1,15 @@
 // constants
-color BACKGROUND_COLOUR = color(255,255,255);
+color BACKGROUND_COLOUR = color(255, 255, 255);
 PImage pStanding;
+public int playerCount = 0;
 
 
 //sets up classes
 Player player;
+Guard guard1;
+Guard guard2;
+Guard guard3;
+Guard guard4;
 World world;
 HUD hud;
 
@@ -16,12 +21,15 @@ void setup() {
   world = new World();
   hud = new HUD();
   
+
   //world 
   world.charactersInWorld.add(player);
-  
+  world.charactersInWorld.add(guard1);
+  world.charactersInWorld.add(guard2);
+
+
   //spritesd
   pStanding = loadImage("pStanding.png");
-  
 }
 
 
@@ -56,8 +64,8 @@ void keyReleased() {
   {
     player.stopLeft();
   }
-  
-  if (key == 's'){
+
+  if (key == 's') {
     player.drop();
   }
 }

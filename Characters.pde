@@ -4,8 +4,12 @@ class PCharacter {
   PVector pos;
   PVector vel;
   PVector accel;
-  int mass = 1;
+  float mass = 1;
   boolean collision = false;
+
+
+  int playerH = 42; 
+  int playerW = 15;
 
 
   public PCharacter(int x, int y) {
@@ -28,6 +32,9 @@ class PCharacter {
 
   void collideWithObjects(ArrayList<Block> chars) {
   }
+
+  void guardKilled() {
+  }
 }
 
 
@@ -37,12 +44,12 @@ class Player extends PCharacter { //The player class
 
   //modifyable Variables
 
-  float c = 0.16; // friction coefficient
+  float c = 0.19; // friction coefficient
   PVector jumpForce = new PVector(0, -14); //jump
   PVector moveForce = new PVector (0.28, 0); //right 
   PVector negMoveForce = new PVector (-0.28, 0); //left
   PVector grav = new PVector(0, 0.45); //gravity
-  float xMax = 5; //Terminal velocity on the x axis
+  float xMax = 4.5; //Terminal velocity on the x axis
   //float yMax = 10; //Terminal velocity on the y axis 
   boolean topCollision = false; //checks if player is on the top
   boolean botCollision = false;
@@ -52,8 +59,7 @@ class Player extends PCharacter { //The player class
   //variable set ups
   boolean leftPressed;
   boolean rightPressed;
-  int playerH = 42; 
-  int playerW = 15;
+
 
 
 
@@ -104,10 +110,12 @@ class Player extends PCharacter { //The player class
 
     //friction calculations and application 
     PVector friction = vel.copy();
-    friction.mult(-1); 
+    friction.mult(-1);
     friction.normalize();
     friction.mult(c);
     applyForce(friction);
+
+
 
 
     if (pos.y > floor-playerH) { //check to stop clipping into the floor
@@ -130,10 +138,30 @@ class Player extends PCharacter { //The player class
 
   //This is used for takeDowns
   void collideWithPlayers(ArrayList<PCharacter> chars) {
+    playerCount = 0;
     for (PCharacter i : chars) {
-      //if (pos.x > i.pos.x) pos.x = i.pos.x;
+      if (playerCount == 0) {
+        playerCount++;
+      } else {
+        if (pos.x+playerW >= i.pos.x) { //left detection
+          if (pos.x <= i.pos.x+playerW) {  //right detection
+
+            //Y detections
+            if (pos.y <= i.pos.y+playerH) { //bottom
+              if (pos.y+playerH >= i.pos.y-(playerH)) { //top
+
+
+                world.killCharacter(playerCount);
+              }
+            }
+          }
+        }
+      }
+      playerCount++;
     }
   }
+
+
 
 
   void collideWithObjects(ArrayList<Block> blocks) { //block collision
@@ -219,6 +247,132 @@ class Player extends PCharacter { //The player class
       vel.y = 3;
       topCollision = false;
       botCollision = false;
+    }
+  }
+}
+
+//--------------------------------------------------------------------------------------------//
+
+
+class Guard extends PCharacter { 
+
+  float c = 0.19; // friction coefficient
+  PVector jumpForce = new PVector(0, -14); //jump
+  PVector moveForce = new PVector (0.28, 0); //right 
+  PVector negMoveForce = new PVector (-0.28, 0); //left
+  PVector grav = new PVector(0, 0.45); //gravity
+  float xMax = 1; //Terminal velocity on the x axis
+  //float yMax = 10; //Terminal velocity on the y axis 
+  boolean topCollision = false; //checks if player is on the top
+  boolean botCollision = false;
+  boolean rightCollision = false;
+  boolean leftCollision = false;
+  boolean moveL = false;
+
+
+
+
+  public Guard(int x, int y) {
+    super(x, y);
+  }
+
+  void draw() {
+    // do extra stuff here
+    //image(pStanding, pos.x, pos.y);
+    rect(pos.x, pos.y, playerW, playerH);
+  }
+
+
+
+
+  void applyForce(PVector force) { //force calculations
+    //Terminal velocity x value
+    if (vel.x >= xMax ) { 
+      vel.x = xMax;
+    } else if (vel.x <= -xMax ) {
+      vel.x = -xMax;
+    }
+
+    //Calulations 
+    PVector f = PVector.div(force, mass);
+    accel.add(f);
+  }
+
+
+
+  void update() { //Main draw function
+
+    if (collision == false) { //checks the player is not hanging on an object
+      applyForce(grav);
+    } else {
+      collision = false;
+    }
+
+
+    //friction calculations and application 
+    PVector friction = vel.copy();
+    friction.mult(-1); 
+    friction.normalize();
+    friction.mult(c);
+    applyForce(friction);
+
+    if (moveL == true) {
+      applyForce(moveForce);
+    } else {
+      applyForce(negMoveForce);
+    }
+
+    super.update();
+
+    if (pos.y > ground-playerH) { //check to stop clipping into the floor
+      vel.y = 0; 
+      pos.y = floor-playerH;
+    }
+
+    ground = floor; //this resets the players ground position to stop it from jumping when not on an object or floor
+    botCollision = false;
+  }
+
+
+  void guardKilled() {
+    pos.x = (5000);
+  }
+
+
+
+  void collideWithObjects(ArrayList<Block> blocks) { //block collision
+
+    for (Block i : blocks) { //Runs though all blocks
+
+      //X detections
+      if (pos.x+playerW >= i.pos.x) { //left detection
+        if (pos.x <= i.pos.x+blockW) {  //right detection
+
+
+          //Y detections
+          if (pos.y <= i.pos.y+blockH) { //bottom
+            if (pos.y+playerH >= i.pos.y-(blockH)) { //top
+
+
+              topCollision = false;
+              rightCollision = false;
+              leftCollision = false;
+            } else if (pos.y <= i.pos.y+blockH) { //this checks if the player is on top of an object
+              pos.y = i.pos.y-playerH;
+              topCollision = true;
+            } 
+
+            if (pos.x +vel.x <= i.pos.x) {
+              moveL = true;
+            } else if (pos.x + vel.x >= i.pos.x+blockW-2) {
+              moveL = false;
+            }
+
+            vel.y=0;
+            collision = true;
+          }
+        }
+      }
     }
   }
 }
