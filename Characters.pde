@@ -37,12 +37,12 @@ class Player extends PCharacter { //The player class
 
   //modifyable Variables
 
-  float c = 0.1; // friction coefficient
-  PVector jumpForce = new PVector(0, -10); //jump
-  PVector moveForce = new PVector (0.22, 0); //right 
-  PVector negMoveForce = new PVector (-0.22, 0); //left
-  PVector grav = new PVector(0, 0.35); //gravity
-  float xMax = 3; //Terminal velocity on the x axis
+  float c = 0.16; // friction coefficient
+  PVector jumpForce = new PVector(0, -14); //jump
+  PVector moveForce = new PVector (0.28, 0); //right 
+  PVector negMoveForce = new PVector (-0.28, 0); //left
+  PVector grav = new PVector(0, 0.45); //gravity
+  float xMax = 5; //Terminal velocity on the x axis
   //float yMax = 10; //Terminal velocity on the y axis 
   boolean topCollision = false; //checks if player is on the top
   boolean botCollision = false;
@@ -116,6 +116,7 @@ class Player extends PCharacter { //The player class
     }
 
     ground = floor; //this resets the players ground position to stop it from jumping when not on an object or floor
+    botCollision = false;
 
     super.update();
   }
@@ -125,13 +126,12 @@ class Player extends PCharacter { //The player class
     // do extra stuff here
     //image(pStanding, pos.x, pos.y);
     rect(pos.x, pos.y, playerW, playerH);
-    
   }
 
   //This is used for takeDowns
   void collideWithPlayers(ArrayList<PCharacter> chars) {
     for (PCharacter i : chars) {
-      if (pos.x > i.pos.x) pos.x = i.pos.x;
+      //if (pos.x > i.pos.x) pos.x = i.pos.x;
     }
   }
 

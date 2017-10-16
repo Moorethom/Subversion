@@ -10,7 +10,7 @@ HUD hud;
 
 
 void setup() {
-  size(1400, 800, P2D);
+  size(1366, 768, P2D);
   background(BACKGROUND_COLOUR);
   player = new Player(30, floor+25);
   world = new World();
@@ -19,7 +19,7 @@ void setup() {
   //world 
   world.charactersInWorld.add(player);
   
-  //sprites
+  //spritesd
   pStanding = loadImage("pStanding.png");
   
 }

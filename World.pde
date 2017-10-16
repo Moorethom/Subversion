@@ -1,6 +1,6 @@
 float ground; //ground height of the world
 int floor = 750;
-int blockH = 6;
+int blockH = 10;
 int blockW = 120;
 
 class World {
@@ -40,13 +40,7 @@ class World {
     ArrayList<Block> blocks = new ArrayList();
 
     //.........
-    blocks.add(new ConcreteBlock(300, 460));
-    blocks.add(new ConcreteBlock(440, 330));
-    blocks.add(new ConcreteBlock(580, 400));
-    blocks.add(new ConcreteBlock(300, 220));
-    blocks.add(new ConcreteBlock(180, 305));
-    blocks.add(new ConcreteBlock(600, 180));
-    blocks.add(new ConcreteBlock(500, 180));
+    blocks.add(new ConcreteBlock(600, 600));
     //........
 
     return blocks;
