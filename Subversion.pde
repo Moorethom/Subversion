@@ -34,7 +34,6 @@ void setup() {
   world.charactersInWorld.add(player);
 
 
-
   //spritesd
   pStanding = loadImage("pStanding.png");
 }
@@ -74,6 +73,7 @@ void keyReleased() {
 
   if (key == 's') {
     player.drop();
+    player.fall();
   }
 
   if (key == ' ') {

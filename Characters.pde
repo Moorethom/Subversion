@@ -19,6 +19,7 @@ class PCharacter {
 
   int countBlock;
 
+  //------------------------//
 
   public PCharacter(int x, int y) {
     pos = new PVector(x, y);
@@ -26,14 +27,18 @@ class PCharacter {
     accel = new PVector(0, 0);
   }
 
+  //------------------------//
+
   void draw() {
   }
+
+  //------------------------//
 
   void update() {
     vel.add(accel);
     pos.add(vel);
-    if (pos.x<=0) {
-      pos.x=0;
+    if (pos.x<=-1) {
+      pos.x=-1;
     } 
     if (pos.x>10000) {
       pos.x = 50000;
@@ -43,14 +48,22 @@ class PCharacter {
     accel.mult(0);
   }
 
+  //------------------------//
+
   void collideWithPlayers(ArrayList<PCharacter> chars) {
   }
+
+  //------------------------//
 
   void collideWithObjects(ArrayList<Block> chars) {
   }
 
+  //------------------------//
+
   void guardKilled() {
   }
+
+  //------------------------//
 
   int checkForDoor(ArrayList<Block> blocks) {
     return 0;
@@ -82,7 +95,7 @@ class Player extends PCharacter { //The player class
   boolean rightPressed;
 
 
-
+  //------------------------//
 
   public Player(int x, int y) {
     super(x, y);
@@ -91,6 +104,7 @@ class Player extends PCharacter { //The player class
     rightPressed = false;
   }
 
+  //------------------------//
 
   void applyForce(PVector force) { //force calculations
     //Terminal velocity x value
@@ -113,9 +127,9 @@ class Player extends PCharacter { //The player class
   }
 
 
+  //------------------------//
 
   void update() { //Main draw function
-
 
 
     //moves the character if pressed
@@ -150,12 +164,16 @@ class Player extends PCharacter { //The player class
     super.update();
   }
 
+  //------------------------//
+
   void draw() {
 
     // do extra stuff here
     //image(pStanding, pos.x, pos.y);
     rect(pos.x, pos.y, playerW, playerH);
   }
+
+  //------------------------//
 
   //This is used for takeDowns
   void collideWithPlayers(ArrayList<PCharacter> chars) {
@@ -182,7 +200,7 @@ class Player extends PCharacter { //The player class
     }
   }
 
-
+  //------------------------//
 
 
   void collideWithObjects(ArrayList<Block> blocks) { //block collision
@@ -203,7 +221,7 @@ class Player extends PCharacter { //The player class
         blockH = 50;
         blockW = 8;
       } else if (blockType == 5) {
-        blockH = 2;
+        blockH = 4;
         blockW = 40;
       } else {
         blockH = 0;
@@ -235,9 +253,9 @@ class Player extends PCharacter { //The player class
                   pos.y = i.pos.y-playerH;
                   topCollision = true;
                 }
-              if(blockType == 5){
-                block5Collision = true;
-              }
+                if (blockType == 5) {
+                  block5Collision = true;
+                }
                 collision = true;
                 vel.y=0;
               } else if (blockType == 1 || blockType == 2 || blockType == 3) { //if it is a wall
@@ -260,11 +278,34 @@ class Player extends PCharacter { //The player class
       }
     }
   }
+  
+   //------------------------//
 
-  int checkForDoor(ArrayList<Block> blocks) {
-    countBlock =0;
+  int checkForDoor(ArrayList<Block> blocks) { //checks for door near the player
+    countBlock = 0;
     for (Block i : blocks) { //Runs though all blocks
       countBlock++;
+      
+      blockType = i.getBlock();
+      if (blockType == 0) {
+        blockH = 10;
+        blockW = floorW;
+      } else if (blockType == 1) {
+        blockH = 150;
+        blockW = 10;
+      } else if (blockType == 2) {
+        blockH = 100;
+        blockW = 10;
+      } else if (blockType == 3) {
+        blockH = 50;
+        blockW = 8;
+      } else if (blockType == 5) {
+        blockH = 4;
+        blockW = 40;
+      } else {
+        blockH = 0;
+        blockW = 0;
+      }
       if (blockType == 3 || blockType == 4) {
         blockH = 50;
         blockW = 8;
@@ -287,8 +328,7 @@ class Player extends PCharacter { //The player class
     return 0;
   }
 
-
-  //--------------------------------------------------------------------------------------------//
+   //------------------------//
 
   //Button presses
 
@@ -311,18 +351,25 @@ class Player extends PCharacter { //The player class
   }
 
   void jump() {
-    if (pos.y+playerH >= ground || topCollision == true || leftCollision == true || rightCollision == true) //checks if the player is on the ground allowing to drop
+    if (pos.y+playerH >= ground || topCollision == true) //checks if the player is on the ground allowing to drop
       applyForce(jumpForce);
     topCollision = false;
-    leftCollision = false;
-    rightCollision = false;
+    //leftCollision = false;
+    //rightCollision = false;
   }
 
   void drop() {
     if (botCollision == true) {
       vel.y = 4;
-      topCollision = false;
       botCollision = false;
+    }
+  }
+  
+  void fall() {
+    if (block5Collision == true) {
+      vel.y = 8;
+      botCollision = true;
+      block5Collision = false;
     }
   }
 }
@@ -350,11 +397,13 @@ class Guard extends PCharacter {
   int timed;
 
 
-
+ //------------------------//
 
   public Guard(int x, int y) {
     super(x, y);
   }
+  
+   //------------------------//
 
   void draw() {
     // do extra stuff here
@@ -377,6 +426,8 @@ class Guard extends PCharacter {
     PVector f = PVector.div(force, mass);
     accel.add(f);
   }
+  
+   //------------------------//
 
 
   boolean checkCol(ArrayList<Block> blocks) {
@@ -385,6 +436,8 @@ class Guard extends PCharacter {
     double c = pos.y-m*pos.x;
 
     if (m >= -1 && m <= 1) {
+
+
       float x = pos.x;
       float y = pos.y;
 
@@ -395,7 +448,7 @@ class Guard extends PCharacter {
           }
         }
         //Y detections
-        if (y <= i.pos.y+blockH+2) { //bottom
+        if (y <= i.pos.y+blockH) { //bottom
           if (y >= i.pos.y) { //top
             return false;
           }
@@ -409,9 +462,8 @@ class Guard extends PCharacter {
     }
     return false;
   }
-
-
-
+  
+   //------------------------//
 
   void update() { //Main draw function
 
@@ -446,15 +498,27 @@ class Guard extends PCharacter {
 
     super.update();
   }
-
+  
+   //------------------------//
 
   void guardKilled() {
     pos.x = 50000;
   }
-
+  
+   //------------------------//
 
 
   void collideWithObjects(ArrayList<Block> blocks) { //block collision
+
+    double distance = Math.sqrt(Math.pow(pos.x - player.pos.x, 2)+Math.pow(pos.y-player.pos.y, 2));
+    if (moveL == true && pos.x <= player.pos.x && distance <= 240 && distance >= -240) {
+      detection = checkCol(blocks);
+    } else if (moveL != true && pos.x >= player.pos.x &&  distance <= 240 && distance >= -240) {
+      detection = checkCol(blocks);
+    } else {
+      detection = false;
+    }
+
 
     for (Block i : blocks) { //Runs though all blocks
 
@@ -472,7 +536,7 @@ class Guard extends PCharacter {
         blockH = 50;
         blockW = 8;
       } else if (blockType == 5) {
-        blockH = 2;
+        blockH = 4;
         blockW = 40;
       } else {
         blockH = 0;
@@ -494,7 +558,7 @@ class Guard extends PCharacter {
               rightCollision = false;
               leftCollision = false;
               block5Collision = false;
-              
+
               if (blockType == 0 || blockType == 5) { //if it is a floor
                 if (pos.y+playerH >= i.pos.y+(blockH+2)) { //this checks if the player is hanging off the object
                   pos.y=i.pos.y+blockH-1;
@@ -504,8 +568,8 @@ class Guard extends PCharacter {
                   topCollision = true;
                 }
               }
-              
-              if(blockType == 5){
+
+              if (blockType == 5) {
                 block5Collision = true;
               }
 
@@ -534,15 +598,6 @@ class Guard extends PCharacter {
             }
           }
         }
-      }
-
-      double distance = Math.sqrt(Math.pow(pos.x - player.pos.x, 2)+Math.pow(pos.y-player.pos.y, 2));
-      if (moveL == true && pos.x <= player.pos.x && distance <= 240 && distance >= -240) {
-        detection = checkCol(blocks);
-      } else if (moveL != true && pos.x >= player.pos.x &&  distance <= 240 && distance >= -240) {
-        detection = checkCol(blocks);
-      } else {
-        detection = false;
       }
 
       if (detection == true) {

@@ -46,7 +46,7 @@ class World {
         blockH = 50;
         blockW = 8;
       } else if (blockType == 5) {
-        blockH = 2;
+        blockH = 4;
         blockW = 40;
       } else {
         blockH = 0;
@@ -64,12 +64,12 @@ class World {
   }
 
   void killCharacter(int ch) {
-    tempCount = 1;
+    tempCount = 0;
     for (PCharacter character : charactersInWorld) {
+      tempCount++;
       if (tempCount == ch) {
         character.guardKilled();
       }
-      tempCount++;
     }
   }
 
@@ -84,6 +84,7 @@ class World {
      blocks.add(new wallBlock(200, 600));
      blocks.add(new doorWallBlock(330, 600));
      blocks.add(new doorBlock(331, 700));
+     /blocks.add(new jumpBlock(700, 592));
      
      blocks to start each world
      blocks.add(new wallBlock(-11, 600));
@@ -92,24 +93,28 @@ class World {
      Characters
      charactersInWorld.add(guard4 = new Guard(0, 0));
      
+     Do doors last
+     
      */
 
     //Addblocks here  
     //.........
     blocks.add(new wallBlock(-11, 600));
     blocks.add(new wallBlock(1366, 600));
-    
+
     blocks.add(new ConcreteBlock(400, 590));
     blocks.add(new wallBlock(410, 600));
     blocks.add(new doorWallBlock(630, 600));
-    blocks.add(new doorBlock(631, 700));
     blocks.add(new jumpBlock(700, 592));
+    blocks.add(new doorBlock(631, 700));
+    //blocks.add(new wallBlock(800, 600));
+    
     //........
 
 
     charactersInWorld.add(guard1 = new Guard(50000, 650));
     charactersInWorld.add(guard2 = new Guard(450, 750-42));
-    //charactersInWorld.add(guard3 = new Guard(450, 575-42));
+    charactersInWorld.add(guard3 = new Guard(450, 575-42));
     //charactersInWorld.add(guard4 = new Guard(0, 0));
     //charactersInWorld.add(guard5 = new Guard(0, 250-25));
     //charactersInWorld.add(guard6 = new Guard(0, 250-25));
@@ -120,6 +125,7 @@ class World {
   void openD() {
     nearDoor = 0;
     nearDoor = player.checkForDoor(currentWorld);
+    println(nearDoor);
 
     if (nearDoor != 0) {
       tempCount = 0;
