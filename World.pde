@@ -5,7 +5,6 @@ int blockW;
 int tempCount = 0;
 int blockType;
 int nearDoor;
-int currentLevel = 0;
 
 int tempBC = 0;
 
@@ -27,6 +26,9 @@ class World {
   public World() {
     charactersInWorld = new ArrayList();
     currentWorld = loadLevel(currentLevel);
+    for(PCharacter character : charactersInWorld) {  
+      playersInWorld++;
+    }
   }
 
   void update() {
@@ -78,6 +80,7 @@ class World {
       tempCount++;
       if (tempCount == ch) {
         character.guardKilled();
+        playersInWorld--;
       }
     }
   }

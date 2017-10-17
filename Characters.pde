@@ -43,6 +43,12 @@ class PCharacter {
     if (pos.x>10000) {
       pos.x = 50000;
     } else if (pos.x>=1366) {
+      if (player.pos.x >= 1366) {
+        if (playersInWorld <= 1) {
+          currentLevel++;
+          setup();
+        }
+      }
       pos.x=1366;
     }
     accel.mult(0);
@@ -158,7 +164,7 @@ class Player extends PCharacter { //The player class
     }
 
     ground = floor; //this resets the players ground position to stop it from jumping when not on an object or floor
-    
+
     super.update();
   }
 
@@ -276,14 +282,14 @@ class Player extends PCharacter { //The player class
       }
     }
   }
-  
-   //------------------------//
+
+  //------------------------//
 
   int checkForDoor(ArrayList<Block> blocks) { //checks for door near the player
     countBlock = 0;
     for (Block i : blocks) { //Runs though all blocks
       countBlock++;
-      
+
       blockType = i.getBlock();
       if (blockType == 0) {
         blockH = 10;
@@ -326,7 +332,7 @@ class Player extends PCharacter { //The player class
     return 0;
   }
 
-   //------------------------//
+  //------------------------//
 
   //Button presses
 
@@ -362,7 +368,7 @@ class Player extends PCharacter { //The player class
       botCollision = false;
     }
   }
-  
+
   void fall() {
     if (block5Collision == true) {
       vel.y = 8;
@@ -370,13 +376,13 @@ class Player extends PCharacter { //The player class
       block5Collision = false;
     }
   }
-  
+
   void raise() {
-     if (block5Collision == true) {
-       pos.y -= 42;
-       block5Collision = false;
-       //topCollision = true;
-     }
+    if (block5Collision == true) {
+      pos.y -= 42;
+      block5Collision = false;
+      //topCollision = true;
+    }
   }
 }
 
@@ -403,13 +409,13 @@ class Guard extends PCharacter {
   int timed;
 
 
- //------------------------//
+  //------------------------//
 
   public Guard(int x, int y) {
     super(x, y);
   }
-  
-   //------------------------//
+
+  //------------------------//
 
   void draw() {
     // do extra stuff here
@@ -432,8 +438,8 @@ class Guard extends PCharacter {
     PVector f = PVector.div(force, mass);
     accel.add(f);
   }
-  
-   //------------------------//
+
+  //------------------------//
 
 
   boolean checkCol(ArrayList<Block> blocks) {
@@ -468,8 +474,8 @@ class Guard extends PCharacter {
     }
     return false;
   }
-  
-   //------------------------//
+
+  //------------------------//
 
   void update() { //Main draw function
 
@@ -504,14 +510,14 @@ class Guard extends PCharacter {
 
     super.update();
   }
-  
-   //------------------------//
+
+  //------------------------//
 
   void guardKilled() {
     pos.x = 50000;
   }
-  
-   //------------------------//
+
+  //------------------------//
 
 
   void collideWithObjects(ArrayList<Block> blocks) { //block collision

@@ -2,6 +2,8 @@
 color BACKGROUND_COLOUR = color(255, 255, 255);
 PImage pStanding;
 public int playerCount = 0;
+public int currentLevel = 0;
+public int playersInWorld = 0;
 
 public int time;
 
