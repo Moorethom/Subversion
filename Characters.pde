@@ -11,6 +11,11 @@ class PCharacter {
   int playerH = 42; 
   int playerW = 15;
 
+  //THis finds the block type
+  // 0 - Concrete floor block
+  // 1 - Wall type
+  int blockType = 0;
+
 
   public PCharacter(int x, int y) {
     pos = new PVector(x, y);
@@ -24,6 +29,14 @@ class PCharacter {
   void update() {
     vel.add(accel);
     pos.add(vel);
+    if (pos.x<=0) {
+      pos.x=0;
+    } 
+    if (pos.x>10000){
+      pos.x = 50000;
+    } else if (pos.x>=1366) {
+      pos.x=1366;
+    }
     accel.mult(0);
   }
 
@@ -45,7 +58,7 @@ class Player extends PCharacter { //The player class
   //modifyable Variables
 
   float c = 0.19; // friction coefficient
-  PVector jumpForce = new PVector(0, -14); //jump
+  PVector jumpForce = new PVector(0, -15); //jump
   PVector moveForce = new PVector (0.28, 0); //right 
   PVector negMoveForce = new PVector (-0.28, 0); //left
   PVector grav = new PVector(0, 0.45); //gravity
@@ -168,6 +181,22 @@ class Player extends PCharacter { //The player class
 
     for (Block i : blocks) { //Runs though all blocks
 
+      blockType = i.getBlock();
+      if (blockType == 0) {
+        blockH = 10;
+        blockW = 150;
+      } else if (blockType == 1) {
+        blockH = 150;
+        blockW = 10;
+      } else if (blockType == 2){
+        blockH = 100;
+        blockW = 10;
+      } else if (blockType == 3){
+        blockH = 50;
+        blockW = 8;
+      }
+      
+
       //X detections
       if (pos.x+playerW >= i.pos.x) { //left detection
         if (pos.x <= i.pos.x+blockW) {  //right detection
@@ -175,35 +204,41 @@ class Player extends PCharacter { //The player class
 
           //Y detections
           if (pos.y <= i.pos.y+blockH) { //bottom
-            if (pos.y+playerH >= i.pos.y-(blockH/2)) { //top
+            if (pos.y+playerH >= i.pos.y) { //top
 
-
+              botCollision = false;
               topCollision = false;
               rightCollision = false;
               leftCollision = false;
 
-              if (pos.y+playerH >= i.pos.y+(blockH)) { //this checks if the player is hanging off the object
-                pos.y=i.pos.y+blockH-1;
-                botCollision = true;
-              } else if (pos.y <= i.pos.y+blockH) { //this checks if the player is on top of an object
-                pos.y = i.pos.y-playerH;
-                topCollision = true;
-              } 
 
-              //if (pos.x+playerW > i.pos.x) { //left side detection
-              //  if (pos.x+playerW < i.pos.x) {
-              //    pos.x = i.pos.x-playerW;
-              //    rightCollision = true;
-              // }
-              //} else if (pos.x > i.pos.x+blockW) { //right side detection
-              // if (pos.x < i.pos.x+blockW) {
-              //   pos.x = i.pos.x+blockW;
-              //   leftCollision = true;
-              // }
-              //}
+              if (blockType == 0) { //if it is a floor
+                if (pos.y+playerH >= i.pos.y+(blockH)) { //this checks if the player is hanging off the object
+                  pos.y=i.pos.y+blockH-1;
+                  botCollision = true;
+                } else if (pos.y <= i.pos.y+blockH) { //this checks if the player is on top of an object
+                  pos.y = i.pos.y-playerH;
+                  topCollision = true;
+                }
 
-              vel.y=0;
-              collision = true;
+                collision = true;
+                vel.y=0;
+              } else if (blockType == 1 || blockType == 2) { //if it is a wall
+                if (pos.x+playerW >= i.pos.x) { //left side detection
+                  if (pos.x+playerW <= i.pos.x+blockW) {
+                    println(pos.y);
+                    println(i.pos.y);
+                    pos.x = i.pos.x-playerW;
+                    leftCollision = true;
+                  }
+                } 
+                if (pos.x <= i.pos.x+blockW) { //right side detection
+                  if (pos.x >= i.pos.x-blockW/2) {
+                    pos.x = i.pos.x+blockW;
+                    rightCollision = true;
+                  }
+                }
+              }
             }
           }
         }
@@ -335,7 +370,7 @@ class Guard extends PCharacter {
 
 
   void guardKilled() {
-    pos.x = (5000000);
+    pos.x = 50000;
   }
 
 
@@ -343,6 +378,16 @@ class Guard extends PCharacter {
   void collideWithObjects(ArrayList<Block> blocks) { //block collision
 
     for (Block i : blocks) { //Runs though all blocks
+
+      blockType = i.getBlock(); //Finds the block type
+
+      if (blockType == 0) {
+        blockH = 10;
+        blockW = 150;
+      } else if (blockType == 1) {
+        blockH = 150;
+        blockW = 10;
+      }
       topCollision = false;
       rightCollision = false;
       leftCollision = false;
@@ -357,22 +402,23 @@ class Guard extends PCharacter {
             if (pos.y+playerH >= i.pos.y-(blockH)) { //top
 
 
-              if (pos.y <= i.pos.y+blockH) { //this checks if the player is on top of an object
-                pos.y = i.pos.y-playerH;
-                topCollision = true;
-                if (pos.y+playerH >= i.pos.y+blockH) {
+              if (blockType == 0) {
+                if (pos.y <= i.pos.y+blockH) { //this checks if the player is on top of an object
+                  pos.y = i.pos.y-playerH;
+                  topCollision = true;
+                  if (pos.y+playerH >= i.pos.y-blockH) {
 
-                  if (pos.x + vel.x <= i.pos.x) {
-                    moveL = true;
-                  } 
-                  if (pos.x + vel.x >= i.pos.x+blockW-2) {
-                    moveL = false;
+                    if (pos.x + vel.x <= i.pos.x) {
+                      moveL = true;
+                    } 
+                    if (pos.x + vel.x >= i.pos.x+blockW-2) {
+                      moveL = false;
+                    }
                   }
                 }
+                vel.y=0;
+                collision = true;
               }
-
-              vel.y=0;
-              collision = true;
             }
           }
         }

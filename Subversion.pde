@@ -26,12 +26,7 @@ void setup() {
 
   //world 
   world.charactersInWorld.add(player);
-  world.charactersInWorld.add(guard1);
-  world.charactersInWorld.add(guard2);
-  world.charactersInWorld.add(guard3);
-  world.charactersInWorld.add(guard4);
-  world.charactersInWorld.add(guard5);
-  world.charactersInWorld.add(guard6);
+  
 
 
   //spritesd
