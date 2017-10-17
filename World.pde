@@ -5,6 +5,15 @@ int blockW;
 int tempCount = 0;
 int blockType;
 int nearDoor;
+int currentLevel = 0;
+
+int tempBC = 0;
+
+int x;
+int y;
+
+Block tempBlock;
+String tempStr;
 
 public int floorW = 250;
 
@@ -17,7 +26,7 @@ class World {
 
   public World() {
     charactersInWorld = new ArrayList();
-    currentWorld = loadLevel(0);
+    currentWorld = loadLevel(currentLevel);
   }
 
   void update() {
@@ -76,7 +85,8 @@ class World {
 
   ArrayList<Block> loadLevel(int levelNum) { //this generates the level
     ArrayList<Block> blocks = new ArrayList();
-
+    
+    String level = String.valueOf(levelNum);
 
     /*
      Block types
@@ -84,7 +94,7 @@ class World {
      blocks.add(new wallBlock(200, 600));
      blocks.add(new doorWallBlock(330, 600));
      blocks.add(new doorBlock(331, 700));
-     /blocks.add(new jumpBlock(700, 592));
+     blocks.add(new jumpBlock(700, 592));
      
      blocks to start each world
      blocks.add(new wallBlock(-11, 600));
@@ -93,39 +103,54 @@ class World {
      Characters
      charactersInWorld.add(guard4 = new Guard(0, 0));
      
-     Do doors last
-     
      */
 
-    //Addblocks here  
-    //.........
-    blocks.add(new wallBlock(-11, 600));
-    blocks.add(new wallBlock(1366, 600));
-
-    blocks.add(new ConcreteBlock(400, 590));
-    blocks.add(new wallBlock(410, 600));
-    blocks.add(new doorWallBlock(630, 600));
-    blocks.add(new jumpBlock(700, 592));
-    blocks.add(new doorBlock(631, 700));
-    //blocks.add(new wallBlock(800, 600));
+    String[] lines = loadStrings(level+".txt"); //loads file
     
-    //........
-
-
-    charactersInWorld.add(guard1 = new Guard(50000, 650));
-    charactersInWorld.add(guard2 = new Guard(450, 750-42));
-    charactersInWorld.add(guard3 = new Guard(450, 575-42));
-    //charactersInWorld.add(guard4 = new Guard(0, 0));
-    //charactersInWorld.add(guard5 = new Guard(0, 250-25));
-    //charactersInWorld.add(guard6 = new Guard(0, 250-25));
-
+    for (int i = 0; i<lines.length; i++) { 
+      if (lines[i].contains("ConcreteBlock")) { //looks for select block
+        lines[i] = lines[i].replaceAll("[^-?0-9]+", ""); //turns block into numbers
+        x = Integer.parseInt(lines[i]); //makes str into int
+        y = Integer.parseInt(lines[i+1]); //makes str into int
+        blocks.add(new ConcreteBlock(x, y)); //adds new block
+      }
+      if (lines[i].contains("wallBlock")) { //looks for select block
+        lines[i] = lines[i].replaceAll("[^-?0-9]+", ""); //turns block into numbers
+        x = Integer.parseInt(lines[i]); //makes str into int
+        y = Integer.parseInt(lines[i+1]); //makes str into int
+        blocks.add(new wallBlock(x, y)); //adds new block
+      }
+      if (lines[i].contains("jumpBlock")) { //looks for select block
+        lines[i] = lines[i].replaceAll("[^-?0-9]+", ""); //turns block into numbers
+        x = Integer.parseInt(lines[i]); //makes str into int
+        y = Integer.parseInt(lines[i+1]); //makes str into int
+        blocks.add(new jumpBlock(x, y)); //adds new block
+      }
+      if (lines[i].contains("doorWallBlock")) { //looks for select block
+        lines[i] = lines[i].replaceAll("[^-?0-9]+", ""); //turns block into numbers
+        x = Integer.parseInt(lines[i]); //makes str into int
+        y = Integer.parseInt(lines[i+1]); //makes str into int
+        blocks.add(new doorWallBlock(x, y)); //adds new block
+      }
+      if (lines[i].contains("doorBlock")) { //looks for select block
+        lines[i] = lines[i].replaceAll("[^-?0-9]+", ""); //turns block into numbers
+        x = Integer.parseInt(lines[i]); //makes str into int
+        y = Integer.parseInt(lines[i+1]); //makes str into int
+        blocks.add(new doorBlock(x, y)); //adds new block
+      }
+      if (lines[i].contains("Guard")) { //looks for select block
+        lines[i] = lines[i].replaceAll("[^-?0-9]+", "");
+        x = Integer.parseInt(lines[i]); //makes str into int
+        y = Integer.parseInt(lines[i+1]); //makes str into int
+        charactersInWorld.add(guard = new Guard(x, y)); //adds new guard
+      }
+    }
     return blocks;
   }
 
   void openD() {
     nearDoor = 0;
     nearDoor = player.checkForDoor(currentWorld);
-    println(nearDoor);
 
     if (nearDoor != 0) {
       tempCount = 0;

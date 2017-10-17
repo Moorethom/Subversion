@@ -10,12 +10,8 @@ public int time;
 
 //sets up classes
 Player player;
-Guard guard1;
-Guard guard2;
-Guard guard3;
-Guard guard4;
-Guard guard5;
-Guard guard6;
+Guard guard;
+
 World world;
 HUD hud;
 
@@ -57,7 +53,9 @@ void keyPressed() {
   } else if (key == 'a') {
     player.moveLeft();
   } else if (key == 'w') {
+    player.raise();
     player.jump();
+    //player.climb();
   }
 }
 

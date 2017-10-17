@@ -131,7 +131,6 @@ class Player extends PCharacter { //The player class
 
   void update() { //Main draw function
 
-
     //moves the character if pressed
     if (leftPressed) applyForce(negMoveForce); 
     if (rightPressed) applyForce(moveForce);
@@ -153,14 +152,13 @@ class Player extends PCharacter { //The player class
 
 
 
-    if (pos.y > floor-playerH) { //check to stop clipping into the floor
+    if (pos.y > ground-playerH) { //check to stop clipping into the floor
       vel.y = 0; 
       pos.y = floor-playerH;
     }
 
     ground = floor; //this resets the players ground position to stop it from jumping when not on an object or floor
-    botCollision = false;
-
+    
     super.update();
   }
 
@@ -372,6 +370,14 @@ class Player extends PCharacter { //The player class
       block5Collision = false;
     }
   }
+  
+  void raise() {
+     if (block5Collision == true) {
+       pos.y -= 42;
+       block5Collision = false;
+       //topCollision = true;
+     }
+  }
 }
 
 //--------------------------------------------------------------------------------------------//
@@ -576,24 +582,20 @@ class Guard extends PCharacter {
 
               collision = true;
               if (blockType == 1 || blockType == 2 || blockType == 3) { //if it is a wall
-                if (pos.x+playerW >= i.pos.x) { //left side detection
+                if (pos.x+playerW >= i.pos.x) { //right side detection
                   if (pos.x+playerW <= i.pos.x+blockW) {
                     pos.x = i.pos.x-playerW;
-                    leftCollision = true;
+                    rightCollision = true;
+                    moveL = false;
                   }
                 } 
-                if (pos.x <= i.pos.x+blockW) { //right side detection
+                if (pos.x <= i.pos.x+blockW) { //left side detection
                   if (pos.x >= i.pos.x-blockW/2) {
                     pos.x = i.pos.x+blockW;
-                    rightCollision = true;
+                    leftCollision = true;
+                    moveL = true;
                   }
                 }
-              }
-              if (pos.x+playerW >= i.pos.x) {
-                moveL = false;
-              } 
-              if (pos.x >= i.pos.x+blockW) {
-                moveL = true;
               }
             }
           }
