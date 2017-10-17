@@ -1,6 +1,8 @@
 // constants
 color BACKGROUND_COLOUR = color(255, 255, 255);
 PImage pStanding;
+Animation gWalking;
+Animation gBWalking;
 public int playerCount = 0;
 public int currentLevel = 0;
 public int playersInWorld = 0;
@@ -34,6 +36,8 @@ void setup() {
 
   //sprites
   pStanding = loadImage("pStanding.png");
+  gWalking = new Animation("l0_gWalking", 50);
+  gBWalking = new Animation("l0_gBWalking", 50);
 }
 
 

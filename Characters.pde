@@ -173,8 +173,8 @@ class Player extends PCharacter { //The player class
   void draw() {
 
     // do extra stuff here
-    //image(pStanding, pos.x, pos.y);
-    rect(pos.x, pos.y, playerW, playerH);
+    image(pStanding, pos.x, pos.y);
+    //rect(pos.x, pos.y, playerW, playerH);
   }
 
   //------------------------//
@@ -419,8 +419,14 @@ class Guard extends PCharacter {
 
   void draw() {
     // do extra stuff here
-    //image(pStanding, pos.x, pos.y);
-    rect(pos.x, pos.y, playerW, playerH);
+    if (moveL == true) {
+      gWalking.display(pos.x, pos.y);
+    } else if ( moveL == false) {
+      gBWalking.display(pos.x, pos.y);
+    }
+
+
+    //rect(pos.x, pos.y, playerW, playerH);
   }
 
 

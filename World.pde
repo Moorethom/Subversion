@@ -104,11 +104,12 @@ class World {
      */
     
     
-     blocks.add(new ConcreteBlock(360, 490));
-     blocks.add(new ConcreteBlock(360, 490));
-     blocks.add(new ConcreteBlock(360, 490));
-     blocks.add(new ConcreteBlock(360, 490));
-    /*
+     //blocks.add(new ConcreteBlock(360, 490));
+     //blocks.add(new ConcreteBlock(360, 490));
+     //blocks.add(new ConcreteBlock(360, 490));
+     //blocks.add(new ConcreteBlock(360, 490));
+     
+    
     String[] lines = loadStrings(level+".txt"); //loads file
     
     for (int i = 0; i<lines.length; i++) { 
@@ -149,7 +150,7 @@ class World {
         charactersInWorld.add(guard = new Guard(x, y)); //adds new guard
       }
     }
-    */
+    
     return blocks;
   }
 
