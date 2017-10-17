@@ -1,7 +1,5 @@
 wallBlock-11
 600
-wallBlock1366 
-600
 ConcreteBlock400
 590
 ConcreteBlock690
