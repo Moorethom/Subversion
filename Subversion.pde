@@ -32,7 +32,7 @@ void setup() {
   world.charactersInWorld.add(player);
 
 
-  //spritesd
+  //sprites
   pStanding = loadImage("pStanding.png");
 }
 

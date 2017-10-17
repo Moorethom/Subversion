@@ -99,15 +99,16 @@ class World {
      blocks.add(new doorBlock(331, 700));
      blocks.add(new jumpBlock(700, 592));
      
-     blocks to start each world
-     blocks.add(new wallBlock(-11, 600));
-     blocks.add(new wallBlock(1366, 600));
-     
      Characters
-     charactersInWorld.add(guard4 = new Guard(0, 0));
-     
+     charactersInWorld.add(guard = new Guard(0, 0));
      */
-
+    
+    
+     blocks.add(new ConcreteBlock(360, 490));
+     blocks.add(new ConcreteBlock(360, 490));
+     blocks.add(new ConcreteBlock(360, 490));
+     blocks.add(new ConcreteBlock(360, 490));
+    /*
     String[] lines = loadStrings(level+".txt"); //loads file
     
     for (int i = 0; i<lines.length; i++) { 
@@ -148,10 +149,12 @@ class World {
         charactersInWorld.add(guard = new Guard(x, y)); //adds new guard
       }
     }
+    */
     return blocks;
   }
 
-  void openD() {
+
+  void openD() { //This checks for player trying to open a door
     nearDoor = 0;
     nearDoor = player.checkForDoor(currentWorld);
 
