@@ -88,3 +88,15 @@ class doorBlock extends Block {
     }
   }
 }
+
+class jumpBlock extends Block {
+  int blockH = 2;
+  int blockW = 40;
+  public jumpBlock( int x, int y) {
+    super(x, y);
+  }
+
+  int getBlock() {
+    return 5;
+  }
+}

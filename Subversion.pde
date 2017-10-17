@@ -3,6 +3,8 @@ color BACKGROUND_COLOUR = color(255, 255, 255);
 PImage pStanding;
 public int playerCount = 0;
 
+public int time;
+
 
 
 
@@ -24,11 +26,13 @@ void setup() {
   player = new Player(30, floor+25);
   world = new World();
   hud = new HUD();
-  
+
+  time = millis();
+
 
   //world 
   world.charactersInWorld.add(player);
-  
+
 
 
   //spritesd
@@ -71,7 +75,7 @@ void keyReleased() {
   if (key == 's') {
     player.drop();
   }
-  
+
   if (key == ' ') {
     world.openD();
   }

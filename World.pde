@@ -45,6 +45,9 @@ class World {
       } else if (blockType == 3) {
         blockH = 50;
         blockW = 8;
+      } else if (blockType == 5) {
+        blockH = 2;
+        blockW = 40;
       } else {
         blockH = 0;
         blockW = 0;
@@ -100,12 +103,13 @@ class World {
     blocks.add(new wallBlock(410, 600));
     blocks.add(new doorWallBlock(630, 600));
     blocks.add(new doorBlock(631, 700));
+    blocks.add(new jumpBlock(700, 592));
     //........
 
 
     charactersInWorld.add(guard1 = new Guard(50000, 650));
     charactersInWorld.add(guard2 = new Guard(450, 750-42));
-    charactersInWorld.add(guard3 = new Guard(450, 575-42));
+    //charactersInWorld.add(guard3 = new Guard(450, 575-42));
     //charactersInWorld.add(guard4 = new Guard(0, 0));
     //charactersInWorld.add(guard5 = new Guard(0, 250-25));
     //charactersInWorld.add(guard6 = new Guard(0, 250-25));

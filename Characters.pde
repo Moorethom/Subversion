@@ -75,6 +75,7 @@ class Player extends PCharacter { //The player class
   boolean botCollision = false;
   boolean rightCollision = false;
   boolean leftCollision = false;
+  boolean block5Collision = false;
 
   //variable set ups
   boolean leftPressed;
@@ -201,6 +202,9 @@ class Player extends PCharacter { //The player class
       } else if (blockType == 3) {
         blockH = 50;
         blockW = 8;
+      } else if (blockType == 5) {
+        blockH = 2;
+        blockW = 40;
       } else {
         blockH = 0;
         blockW = 0;
@@ -216,13 +220,14 @@ class Player extends PCharacter { //The player class
           if (pos.y <= i.pos.y+blockH+2) { //bottom
             if (pos.y+playerH >= i.pos.y) { //top
 
-              botCollision = false;
+              //botCollision = false;
               topCollision = false;
               rightCollision = false;
               leftCollision = false;
+              block5Collision = false;
 
 
-              if (blockType == 0) { //if it is a floor
+              if (blockType == 0 || blockType == 5) { //if it is a floor
                 if (pos.y+playerH >= i.pos.y+(blockH+2)) { //this checks if the player is hanging off the object
                   pos.y=i.pos.y+blockH-1;
                   botCollision = true;
@@ -230,7 +235,9 @@ class Player extends PCharacter { //The player class
                   pos.y = i.pos.y-playerH;
                   topCollision = true;
                 }
-
+              if(blockType == 5){
+                block5Collision = true;
+              }
                 collision = true;
                 vel.y=0;
               } else if (blockType == 1 || blockType == 2 || blockType == 3) { //if it is a wall
@@ -313,7 +320,7 @@ class Player extends PCharacter { //The player class
 
   void drop() {
     if (botCollision == true) {
-      vel.y = 3;
+      vel.y = 4;
       topCollision = false;
       botCollision = false;
     }
@@ -337,7 +344,10 @@ class Guard extends PCharacter {
   boolean rightCollision = false;
   boolean leftCollision = false;
   boolean moveL = false;
-  boolean detection = false;
+  boolean detection;
+  boolean block5Collision = false;
+  int timer;
+  int timed;
 
 
 
@@ -368,36 +378,48 @@ class Guard extends PCharacter {
     accel.add(f);
   }
 
-  boolean checkCol() {
-    double distance = Math.sqrt(Math.pow(pos.x - player.pos.x, 2)+Math.pow(pos.y-player.pos.y, 2));
-    println(distance);
-    double m = (pos.y-player.pos.y)/(pos.x - player.pos.x);
-    double c = player.pos.y-m*player.pos.x;
 
-    int x = (int) player.pos.x;
-    int y = (int) player.pos.y;
-    
-    ellipse(x,y,1,1);
-    x += 1;
-    double yi = m*x+c;
-    y = round((float)yi);
+  boolean checkCol(ArrayList<Block> blocks) {
+
+    double m = (player.pos.y-pos.y)/(player.pos.x-pos.x);
+    double c = pos.y-m*pos.x;
+
+    if (m >= -1 && m <= 1) {
+      float x = pos.x;
+      float y = pos.y;
+
+      for (Block i : blocks) {
+        if (x >= i.pos.x) { //left detection
+          if (x <= i.pos.x+blockW) {  //right detection
+            return false;
+          }
+        }
+        //Y detections
+        if (y <= i.pos.y+blockH+2) { //bottom
+          if (y >= i.pos.y) { //top
+            return false;
+          }
+        }
+        x += 1;
+        double yi = m*x+c;
+        y = round((float)yi);
+      }
+
+      return true;
+    }
     return false;
   }
 
 
 
-  void update() { //Main draw function
 
+  void update() { //Main draw function
 
     if (collision == false) {  //checks the player is not hanging on an object
       applyForce(grav);
     } else {
       collision = false;
     }
-
-    //calulation for guards detections
-    detection = checkCol();
-
 
     //friction calculations and application 
     PVector friction = vel.copy();
@@ -449,6 +471,9 @@ class Guard extends PCharacter {
       } else if (blockType == 3) {
         blockH = 50;
         blockW = 8;
+      } else if (blockType == 5) {
+        blockH = 2;
+        blockW = 40;
       } else {
         blockH = 0;
         blockW = 0;
@@ -468,7 +493,9 @@ class Guard extends PCharacter {
               topCollision = false;
               rightCollision = false;
               leftCollision = false;
-              if (blockType == 0) { //if it is a floor
+              block5Collision = false;
+              
+              if (blockType == 0 || blockType == 5) { //if it is a floor
                 if (pos.y+playerH >= i.pos.y+(blockH+2)) { //this checks if the player is hanging off the object
                   pos.y=i.pos.y+blockH-1;
                   botCollision = true;
@@ -476,6 +503,10 @@ class Guard extends PCharacter {
                   pos.y = i.pos.y-playerH;
                   topCollision = true;
                 }
+              }
+              
+              if(blockType == 5){
+                block5Collision = true;
               }
 
 
@@ -503,6 +534,25 @@ class Guard extends PCharacter {
             }
           }
         }
+      }
+
+      double distance = Math.sqrt(Math.pow(pos.x - player.pos.x, 2)+Math.pow(pos.y-player.pos.y, 2));
+      if (moveL == true && pos.x <= player.pos.x && distance <= 240 && distance >= -240) {
+        detection = checkCol(blocks);
+      } else if (moveL != true && pos.x >= player.pos.x &&  distance <= 240 && distance >= -240) {
+        detection = checkCol(blocks);
+      } else {
+        detection = false;
+      }
+
+      if (detection == true) {
+        timer = millis()-time;
+        xMax = 3;
+      }
+      timed = millis()-time;
+      if (timed >= timer+6000) {
+        xMax = 1;
+        detection = false;
       }
     }
   }
