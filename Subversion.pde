@@ -1,8 +1,22 @@
 // constants
 color BACKGROUND_COLOUR = color(255, 255, 255);
+
 PImage pStanding;
+PImage pFalling;
+PImage pJumping;
+PImage pBJumping;
+PImage pBFalling;
+PImage pHanging;
+
 Animation gWalking;
 Animation gBWalking;
+Animation pSwinging;
+Animation pBSwinging;
+Animation pRunning;
+Animation pBRunning;
+
+
+
 public int playerCount = 0;
 public int currentLevel = 0;
 public int playersInWorld = 0;
@@ -36,8 +50,18 @@ void setup() {
 
   //sprites
   pStanding = loadImage("pStanding.png");
+  pFalling = loadImage("pFalling.png");
+  pJumping = loadImage("pJumping.png");
+  pBJumping = loadImage("pBJumping.png");
+  pBFalling = loadImage("pBFalling.png");
+  pHanging = loadImage("l0_pHanging_01.png");
+  
   gWalking = new Animation("l0_gWalking", 50);
   gBWalking = new Animation("l0_gBWalking", 50);
+  pRunning = new Animation("l0_pRunning", 47);
+  pBRunning = new Animation("pBRunning", 46);
+  pSwinging = new Animation("l0_pHanging", 70);
+  pBSwinging = new Animation("l0_pBHanging", 70);
 }
 
 

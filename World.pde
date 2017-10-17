@@ -104,11 +104,6 @@ class World {
      */
     
     
-     //blocks.add(new ConcreteBlock(360, 490));
-     //blocks.add(new ConcreteBlock(360, 490));
-     //blocks.add(new ConcreteBlock(360, 490));
-     //blocks.add(new ConcreteBlock(360, 490));
-     
     
     String[] lines = loadStrings(level+".txt"); //loads file
     

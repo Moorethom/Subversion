@@ -5,7 +5,7 @@ class PCharacter {
   PVector vel;
   PVector accel;
   float mass = 1;
-  boolean collision = false;
+  boolean collision;
 
 
   int playerH = 42; 
@@ -144,9 +144,7 @@ class Player extends PCharacter { //The player class
 
     if (collision == false) { //checks the player is not hanging on an object
       applyForce(grav);
-    } else {
-      collision = false;
-    }
+    } 
 
     //friction calculations and application 
     PVector friction = vel.copy();
@@ -172,9 +170,36 @@ class Player extends PCharacter { //The player class
 
   void draw() {
 
-    // do extra stuff here
-    image(pStanding, pos.x, pos.y);
     //rect(pos.x, pos.y, playerW, playerH);
+    if (vel.x >= 0.2 || vel.x <= -0.2 && vel.y <=0.1 && topCollision == true) {
+      if (vel.x >= 0.2) {
+        pRunning.display(pos.x, pos.y);
+      } else {
+        pBRunning.display(pos.x, pos.y);
+      }
+    } else if (botCollision ==true && vel.y == 0) {
+      if (vel.x >= 0.2) {
+        pSwinging.display(pos.x, pos.y);
+      } else if (vel.x <= -0.2) {
+        pBSwinging.display(pos.x, pos.y);
+      } else {
+        image(pHanging, pos.x, pos.y);
+      }
+    } else  if (vel.x <= 0.2 && vel.x >= -0.2 && vel.y >= -0.1) {
+      image(pStanding, pos.x, pos.y);
+    } else if (vel.y < 0) {
+      if (vel.x >= 0) {
+        image(pBJumping, pos.x, pos.y);
+      } else {
+        image(pJumping, pos.x, pos.y);
+      }
+    } else if (vel.y > 0) {
+      if (vel.x >= 0) {
+        image(pBFalling, pos.x, pos.y);
+      } else {
+        image(pFalling, pos.x, pos.y);
+      }
+    }
   }
 
   //------------------------//
@@ -231,7 +256,7 @@ class Player extends PCharacter { //The player class
         blockH = 0;
         blockW = 0;
       }
-
+      collision = false;
 
       //X detections
       if (pos.x+playerW >= i.pos.x) { //left detection
@@ -242,7 +267,7 @@ class Player extends PCharacter { //The player class
           if (pos.y <= i.pos.y+blockH+2) { //bottom
             if (pos.y+playerH >= i.pos.y) { //top
 
-              //botCollision = false;
+              botCollision = false;
               topCollision = false;
               rightCollision = false;
               leftCollision = false;
