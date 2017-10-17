@@ -14,6 +14,15 @@ class Block {
   int getBlock() {
     return 0;
   }
+
+  boolean doorOpen() {
+    return false;
+  }
+  
+  void openDoor(){
+    
+  }
+  
 }
 
 class ConcreteBlock extends Block {
@@ -58,11 +67,24 @@ class doorWallBlock extends Block {
 class doorBlock extends Block {
   int blockH = 50;
   int blockW = 8;
+  boolean doorOpen = false;
   public doorBlock( int x, int y) {
     super(x, y);
   }
 
   int getBlock() {
-    return 3;
+    if (doorOpen == false) {
+      return 3;
+    } else {
+      return 4;
+    }
+  }
+  
+  void openDoor(){
+    if(doorOpen == true){
+      doorOpen = false;
+    } else {
+      doorOpen = true;
+    }
   }
 }

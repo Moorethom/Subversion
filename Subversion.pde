@@ -4,6 +4,8 @@ PImage pStanding;
 public int playerCount = 0;
 
 
+
+
 //sets up classes
 Player player;
 Guard guard1;
@@ -68,5 +70,9 @@ void keyReleased() {
 
   if (key == 's') {
     player.drop();
+  }
+  
+  if (key == ' ') {
+    world.openD();
   }
 }

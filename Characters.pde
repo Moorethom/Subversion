@@ -11,10 +11,13 @@ class PCharacter {
   int playerH = 42; 
   int playerW = 15;
 
+
   //THis finds the block type
   // 0 - Concrete floor block
   // 1 - Wall type
   int blockType = 0;
+
+  int countBlock;
 
 
   public PCharacter(int x, int y) {
@@ -32,7 +35,7 @@ class PCharacter {
     if (pos.x<=0) {
       pos.x=0;
     } 
-    if (pos.x>10000){
+    if (pos.x>10000) {
       pos.x = 50000;
     } else if (pos.x>=1366) {
       pos.x=1366;
@@ -47,6 +50,10 @@ class PCharacter {
   }
 
   void guardKilled() {
+  }
+
+  int checkForDoor(ArrayList<Block> blocks) {
+    return 0;
   }
 }
 
@@ -63,7 +70,7 @@ class Player extends PCharacter { //The player class
   PVector negMoveForce = new PVector (-0.28, 0); //left
   PVector grav = new PVector(0, 0.45); //gravity
   float xMax = 4.5; //Terminal velocity on the x axis
-  //float yMax = 10; //Terminal velocity on the y axis 
+  float yMax = 15; //Terminal velocity on the y axis 
   boolean topCollision = false; //checks if player is on the top
   boolean botCollision = false;
   boolean rightCollision = false;
@@ -93,11 +100,11 @@ class Player extends PCharacter { //The player class
     }
 
     //Terminal velocity y value 
-    //if (vel.y >= yMax ) {
-    // vel.y = yMax;
-    //} else if (vel.y <= -yMax ) {
-    //  vel.y = -yMax;
-    //}
+    if (vel.y >= yMax ) {
+      vel.y = yMax;
+    } else if (vel.y <= -yMax ) {
+      vel.y = -yMax;
+    }
 
     //Calulations 
     PVector f = PVector.div(force, mass);
@@ -184,18 +191,21 @@ class Player extends PCharacter { //The player class
       blockType = i.getBlock();
       if (blockType == 0) {
         blockH = 10;
-        blockW = 150;
+        blockW = floorW;
       } else if (blockType == 1) {
         blockH = 150;
         blockW = 10;
-      } else if (blockType == 2){
+      } else if (blockType == 2) {
         blockH = 100;
         blockW = 10;
-      } else if (blockType == 3){
+      } else if (blockType == 3) {
         blockH = 50;
         blockW = 8;
+      } else {
+        blockH = 0;
+        blockW = 0;
       }
-      
+
 
       //X detections
       if (pos.x+playerW >= i.pos.x) { //left detection
@@ -203,7 +213,7 @@ class Player extends PCharacter { //The player class
 
 
           //Y detections
-          if (pos.y <= i.pos.y+blockH) { //bottom
+          if (pos.y <= i.pos.y+blockH+2) { //bottom
             if (pos.y+playerH >= i.pos.y) { //top
 
               botCollision = false;
@@ -213,7 +223,7 @@ class Player extends PCharacter { //The player class
 
 
               if (blockType == 0) { //if it is a floor
-                if (pos.y+playerH >= i.pos.y+(blockH)) { //this checks if the player is hanging off the object
+                if (pos.y+playerH >= i.pos.y+(blockH+2)) { //this checks if the player is hanging off the object
                   pos.y=i.pos.y+blockH-1;
                   botCollision = true;
                 } else if (pos.y <= i.pos.y+blockH) { //this checks if the player is on top of an object
@@ -223,11 +233,9 @@ class Player extends PCharacter { //The player class
 
                 collision = true;
                 vel.y=0;
-              } else if (blockType == 1 || blockType == 2) { //if it is a wall
+              } else if (blockType == 1 || blockType == 2 || blockType == 3) { //if it is a wall
                 if (pos.x+playerW >= i.pos.x) { //left side detection
                   if (pos.x+playerW <= i.pos.x+blockW) {
-                    println(pos.y);
-                    println(i.pos.y);
                     pos.x = i.pos.x-playerW;
                     leftCollision = true;
                   }
@@ -244,6 +252,32 @@ class Player extends PCharacter { //The player class
         }
       }
     }
+  }
+
+  int checkForDoor(ArrayList<Block> blocks) {
+    countBlock =0;
+    for (Block i : blocks) { //Runs though all blocks
+      countBlock++;
+      if (blockType == 3 || blockType == 4) {
+        blockH = 50;
+        blockW = 8;
+
+
+        if (pos.x+playerW >= i.pos.x-45) { //left detection
+          if (pos.x <= i.pos.x+blockW+45) {  //right detection
+
+
+            //Y detections
+            if (pos.y <= i.pos.y+blockH+15) { //bottom
+              if (pos.y+playerH >= i.pos.y-15) { //top
+                return countBlock;
+              }
+            }
+          }
+        }
+      }
+    }
+    return 0;
   }
 
 
@@ -303,6 +337,7 @@ class Guard extends PCharacter {
   boolean rightCollision = false;
   boolean leftCollision = false;
   boolean moveL = false;
+  boolean detection = false;
 
 
 
@@ -342,8 +377,9 @@ class Guard extends PCharacter {
     } else {
       collision = false;
     }
-
-
+    
+    boolean detection = false;
+    
     //friction calculations and application 
     PVector friction = vel.copy();
     friction.mult(-1); 
@@ -357,15 +393,16 @@ class Guard extends PCharacter {
       applyForce(negMoveForce);
     }
 
-    super.update();
 
-    if (pos.y >= ground-playerH) { //check to stop clipping into the floor
+    if (pos.y >= floor-playerH) { //check to stop clipping into the floor
       vel.y = 0; 
-      pos.y = ground-playerH;
+      pos.y = floor-playerH;
     }
 
     ground = floor; //this resets the players ground position to stop it from jumping when not on an object or floor
     botCollision = false;
+
+    super.update();
   }
 
 
@@ -379,18 +416,24 @@ class Guard extends PCharacter {
 
     for (Block i : blocks) { //Runs though all blocks
 
-      blockType = i.getBlock(); //Finds the block type
-
+      blockType = i.getBlock();
       if (blockType == 0) {
         blockH = 10;
-        blockW = 150;
+        blockW = floorW;
       } else if (blockType == 1) {
         blockH = 150;
         blockW = 10;
+      } else if (blockType == 2) {
+        blockH = 100;
+        blockW = 10;
+      } else if (blockType == 3) {
+        blockH = 50;
+        blockW = 8;
+      } else {
+        blockH = 0;
+        blockW = 0;
       }
-      topCollision = false;
-      rightCollision = false;
-      leftCollision = false;
+
 
       //X detections
       if (pos.x+playerW >= i.pos.x) { //left detection
@@ -398,26 +441,36 @@ class Guard extends PCharacter {
 
 
           //Y detections
-          if (pos.y <= i.pos.y+blockH) { //bottom
-            if (pos.y+playerH >= i.pos.y-(blockH)) { //top
+          if (pos.y <= i.pos.y+blockH+2) { //bottom
+            if (pos.y+playerH >= i.pos.y) { //top
+
+              botCollision = false;
+              topCollision = false;
+              rightCollision = false;
+              leftCollision = false;
 
 
-              if (blockType == 0) {
-                if (pos.y <= i.pos.y+blockH) { //this checks if the player is on top of an object
-                  pos.y = i.pos.y-playerH;
-                  topCollision = true;
-                  if (pos.y+playerH >= i.pos.y-blockH) {
 
-                    if (pos.x + vel.x <= i.pos.x) {
-                      moveL = true;
-                    } 
-                    if (pos.x + vel.x >= i.pos.x+blockW-2) {
-                      moveL = false;
-                    }
+              collision = true;
+              if (blockType == 1 || blockType == 2 || blockType == 3) { //if it is a wall
+                if (pos.x+playerW >= i.pos.x) { //left side detection
+                  if (pos.x+playerW <= i.pos.x+blockW) {
+                    pos.x = i.pos.x-playerW;
+                    leftCollision = true;
+                  }
+                } 
+                if (pos.x <= i.pos.x+blockW) { //right side detection
+                  if (pos.x >= i.pos.x-blockW/2) {
+                    pos.x = i.pos.x+blockW;
+                    rightCollision = true;
                   }
                 }
-                vel.y=0;
-                collision = true;
+              }
+              if (pos.x+playerW >= i.pos.x) {
+                moveL = false;
+              } 
+              if (pos.x >= i.pos.x+blockW) {
+                moveL = true;
               }
             }
           }
