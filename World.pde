@@ -105,7 +105,7 @@ class World {
 
     charactersInWorld.add(guard1 = new Guard(50000, 650));
     charactersInWorld.add(guard2 = new Guard(450, 750-42));
-    //charactersInWorld.add(guard3 = new Guard(550, 100-25));
+    charactersInWorld.add(guard3 = new Guard(450, 575-42));
     //charactersInWorld.add(guard4 = new Guard(0, 0));
     //charactersInWorld.add(guard5 = new Guard(0, 250-25));
     //charactersInWorld.add(guard6 = new Guard(0, 250-25));
