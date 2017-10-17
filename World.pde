@@ -103,8 +103,6 @@ class World {
      charactersInWorld.add(guard = new Guard(0, 0));
      */
     
-    
-    
     String[] lines = loadStrings(level+".txt"); //loads file
     
     for (int i = 0; i<lines.length; i++) { 
